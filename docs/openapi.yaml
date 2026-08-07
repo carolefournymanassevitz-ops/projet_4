@@ -1,0 +1,305 @@
+openapi: 3.0.3
+info:
+  title: DataShare API
+  description: >
+    Contrat d'interface front/back pour le MVP DataShare (US01-US06).
+    Écrit à la main en amont de l'implémentation ; sera synchronisé avec
+    la spec générée par springdoc-openapi une fois le back-end codé.
+  version: "0.1.0-mvp"
+servers:
+  - url: http://localhost:8080/api
+    description: Développement local
+
+tags:
+  - name: auth
+  - name: files
+
+paths:
+  /auth/register:
+    post:
+      tags: [auth]
+      summary: Créer un compte (US03)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201':
+          description: Compte créé
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserSummary' }
+        '400':
+          description: Email invalide ou mot de passe trop court (< 8 caractères)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '409':
+          description: Email déjà utilisé
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Connexion (US04)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Authentifié, token JWT retourné
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '401':
+          description: Email ou mot de passe incorrect
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+  /files:
+    post:
+      tags: [files]
+      summary: Téléverser un fichier (US01)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+                  minLength: 6
+                  nullable: true
+                  description: Protège le téléchargement (champ "Mot de passe" de la maquette Upload)
+                expirationDays:
+                  type: integer
+                  minimum: 1
+                  maximum: 7
+                  default: 7
+                  description: Correspond au dropdown "Expiration" de la maquette
+      responses:
+        '201':
+          description: Fichier stocké, lien de téléchargement généré
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UploadResponse' }
+        '400':
+          description: Fichier trop volumineux (> 1 Go), extension interdite, ou mot de passe < 6 caractères
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+    get:
+      tags: [files]
+      summary: Historique des fichiers de l'utilisateur connecté (US05)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Filtre correspondant aux onglets "Actifs" / "Expirés" de la maquette "Mes fichiers"
+          schema:
+            type: string
+            enum: [active, expired]
+      responses:
+        '200':
+          description: Liste des fichiers de l'utilisateur
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/FileHistoryItem' }
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+  /files/{id}:
+    delete:
+      tags: [files]
+      summary: Supprimer un fichier (US06)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/FileId'
+      responses:
+        '204':
+          description: Fichier supprimé (métadonnées + binaire)
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '403':
+          description: Le fichier n'appartient pas à l'utilisateur connecté
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '404':
+          description: Fichier introuvable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+  /files/{id}/info:
+    get:
+      tags: [files]
+      summary: Métadonnées publiques d'un fichier, avant téléchargement (US02)
+      description: >
+        Consultée par la page publique de téléchargement pour afficher nom/taille
+        et savoir s'il faut demander un mot de passe, sans exposer le fichier lui-même.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/FileId'
+      responses:
+        '200':
+          description: Métadonnées du fichier
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FileInfoResponse' }
+        '404':
+          description: Lien invalide (fichier inexistant)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '410':
+          description: Lien expiré
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+  /files/{id}/download:
+    post:
+      tags: [files]
+      summary: Télécharger le fichier (US02)
+      description: >
+        POST (et non GET) car un mot de passe peut être requis dans le corps de la requête.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/FileId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DownloadRequest' }
+      responses:
+        '200':
+          description: Flux binaire du fichier
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+        '401':
+          description: Mot de passe requis mais absent ou incorrect
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '404':
+          description: Lien invalide
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '410':
+          description: Lien expiré
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    FileId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+
+    UserSummary:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+
+    AuthResponse:
+      type: object
+      properties:
+        token: { type: string, description: JWT signé, à envoyer en `Authorization: Bearer <token>` }
+        expiresIn: { type: integer, description: durée de validité en secondes }
+        user: { $ref: '#/components/schemas/UserSummary' }
+
+    UploadResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        downloadUrl: { type: string, description: 'URL front à partager, ex. https://datashare.fr/d/{id}' }
+        expiresAt: { type: string, format: date-time }
+
+    FileHistoryItem:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        originalFilename: { type: string }
+        sizeBytes: { type: integer, format: int64 }
+        createdAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        passwordProtected: { type: boolean }
+        expired: { type: boolean, description: 'expiresAt <= now(), calculé côté serveur' }
+
+    FileInfoResponse:
+      type: object
+      properties:
+        originalFilename: { type: string }
+        sizeBytes: { type: integer, format: int64 }
+        contentType: { type: string, nullable: true }
+        expiresAt: { type: string, format: date-time }
+        passwordProtected: { type: boolean }
+
+    DownloadRequest:
+      type: object
+      properties:
+        password: { type: string, nullable: true }
+
+    ApiError:
+      type: object
+      properties:
+        timestamp: { type: string, format: date-time }
+        status: { type: integer }
+        error: { type: string }
+        message: { type: string }
+        path: { type: string }

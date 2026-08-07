@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DataShare — Architecture &amp; MCD</title>
+<style>
+  :root {
+    --bg: #faf7f3;
+    --surface: #ffffff;
+    --surface-sunken: #f3ede4;
+    --text: #2b241d;
+    --text-muted: #766a5d;
+    --border: #e6ddd0;
+    --accent: #d9662f;
+    --accent-soft: #f4ddcc;
+    --code-bg: #fbf6ee;
+    --shadow: 0 1px 2px rgba(43, 36, 29, 0.06), 0 8px 24px -12px rgba(43, 36, 29, 0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1613;
+      --surface: #241e19;
+      --surface-sunken: #2c241e;
+      --text: #f3ece2;
+      --text-muted: #b6a999;
+      --border: #3c332b;
+      --accent: #f0895c;
+      --accent-soft: #4a3226;
+      --code-bg: #211b17;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1b1613;
+    --surface: #241e19;
+    --surface-sunken: #2c241e;
+    --text: #f3ece2;
+    --text-muted: #b6a999;
+    --border: #3c332b;
+    --accent: #f0895c;
+    --accent-soft: #4a3226;
+    --code-bg: #211b17;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+  }
+
+  body {
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  h1, h2, h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .brand-mark {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), #f2a56f);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Iowan Old Style", Georgia, serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-name {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  h1 { font-size: 2.1rem; }
+
+  .lede {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  h2 { font-size: 1.45rem; }
+
+  .section-head p {
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 68ch;
+  }
+
+  .diagram-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .diagram-card .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: 560px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  thead th {
+    background: var(--surface-sunken);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  code {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    padding: 0.08em 0.4em;
+    font-size: 0.88em;
+  }
+
+  .note {
+    background: var(--accent-soft);
+    border-radius: 0.7rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .note strong { color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  footer code { font-size: 0.82em; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div class="brand">
+        <span class="brand-mark">DS</span>
+        <span class="brand-name">DataShare</span>
+      </div>
+      <p class="eyebrow">Documentation technique — MVP</p>
+      <h1>Architecture &amp; modèle de données</h1>
+      <p class="lede">
+        Rendu visuel des deux schémas de conception : les briques applicatives du prototype,
+        et le modèle conceptuel des données (Merise) qui en découle. Sources :
+        <code>docs/ARCHITECTURE.md</code> et <code>docs/DATA-MODEL.md</code>.
+      </p>
+    </header>
+
+    <section id="architecture">
+      <div class="section-head">
+        <h2>Architecture applicative</h2>
+        <p>
+          Trois-tiers simple : une SPA React consomme une API REST Spring Boot, qui persiste
+          dans PostgreSQL et sur un stockage de fichiers local. Une tâche planifiée purge les
+          fichiers expirés côté base et disque.
+        </p>
+      </div>
+      <div class="diagram-card">
+        <pre class="mermaid">
+flowchart LR
+    subgraph Client["Navigateur"]
+        SPA["React SPA
+(Vite + TypeScript)"]
+    end
+
+    subgraph Server["Serveur applicatif"]
+        API["API REST
+Spring Boot
+(Controller / Service / Repository)"]
+        AUTH["Filtre JWT
+(Spring Security)"]
+        SCHED["Tâche planifiée
+(purge des fichiers expirés)"]
+    end
+
+    subgraph Data["Persistance"]
+        DB[("PostgreSQL
+utilisateurs, métadonnées fichiers")]
+        FS[("Stockage local
+fichiers binaires")]
+    end
+
+    SPA -- "HTTPS / JSON
+(fetch + JWT bearer)" --> API
+    API --> AUTH
+    API -- "JPA / Flyway" --> DB
+    API -- "lecture/écriture" --> FS
+    SCHED -- "purge quotidienne" --> DB
+    SCHED -- "suppression fichiers" --> FS
+        </pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Brique</th><th>Rôle</th><th>Techno</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SPA React</td><td>UI (login, upload, historique, page de téléchargement publique)</td><td>React + Vite + TypeScript</td></tr>
+            <tr><td>API REST</td><td>Logique métier, validation, contrôle d'accès</td><td>Spring Boot (Web, Security, Validation)</td></tr>
+            <tr><td>Authentification</td><td>JWT, hash des mots de passe</td><td>Spring Security + BCrypt + JJWT</td></tr>
+            <tr><td>Base de données</td><td>Comptes + métadonnées fichiers</td><td>PostgreSQL (JPA, migrations Flyway)</td></tr>
+            <tr><td>Stockage fichiers</td><td>Contenu binaire des fichiers</td><td>Système de fichiers local</td></tr>
+            <tr><td>Tâche planifiée</td><td>Purge des fichiers expirés</td><td><code>@Scheduled</code> Spring</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="data-model">
+      <div class="section-head">
+        <h2>Modèle de données (MCD)</h2>
+        <p>
+          Deux entités suffisent pour le périmètre MVP (US01–US06) : un utilisateur dépose
+          zéro à plusieurs fichiers ; un fichier appartient à exactement un utilisateur
+          (pas d'upload anonyme dans le MVP).
+        </p>
+      </div>
+      <div class="diagram-card">
+        <pre class="mermaid">
+erDiagram
+    UTILISATEUR ||--o{ FICHIER : depose
+    UTILISATEUR {
+        uuid id_utilisateur PK
+        string email UK
+        string mot_de_passe_hash
+        timestamp date_creation
+    }
+    FICHIER {
+        uuid id_fichier PK
+        uuid id_utilisateur FK
+        string nom_original
+        string nom_stocke
+        string type_mime
+        bigint taille_octets
+        string mot_de_passe_hash "nullable"
+        timestamp date_expiration
+        timestamp date_creation
+    }
+        </pre>
+      </div>
+
+      <p class="note">
+        <strong>Lecture Merise —</strong> <code>UTILISATEUR (1,1) ──&lt; DEPOSE &gt;── (0,n) FICHIER</code>.
+        Le statut « Actif / Expiré » affiché dans les maquettes n'est pas une colonne : il se
+        déduit de <code>date_expiration &gt; now()</code> au moment de la requête.
+      </p>
+    </section>
+
+    <footer>
+      Généré à partir de <code>docs/ARCHITECTURE.md</code> et <code>docs/DATA-MODEL.md</code> — voir aussi
+      <code>docs/openapi.yaml</code> pour le contrat d'interface front/back.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default" });
+  </script>
+</body>
+</html>
