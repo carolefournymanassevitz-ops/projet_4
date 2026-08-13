@@ -1,5 +1,8 @@
 # Claude Code (outil IA local, ne doit jamais atterrir dans le repo)
 .claude/
+.mcp.json
+CLAUDE.md
+CLAUDE.local.md
 
 # Secrets d'environnement (garder .env.example versionné, jamais le .env réel)
 .env
