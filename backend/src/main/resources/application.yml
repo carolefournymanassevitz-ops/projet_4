@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: datashare-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:datashare}
+    username: ${POSTGRES_USER:datashare}
+    password: ${POSTGRES_PASSWORD:datashare}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
