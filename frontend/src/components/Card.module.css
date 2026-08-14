@@ -1,0 +1,19 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 26rem;
+}
+
+.wide {
+  max-width: 52rem;
+}
+
+.title {
+  margin: 0 0 var(--space-md);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}

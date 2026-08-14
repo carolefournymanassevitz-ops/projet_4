@@ -1,0 +1,65 @@
+:root {
+  /* Couleurs issues des maquettes Figma */
+  --color-gradient-start: #f5a68c;
+  --color-gradient-end: #e8654a;
+  --color-surface: #ffffff;
+  --color-text: #1c1a19;
+  --color-text-muted: #6b6260;
+  --color-accent: #e2622f;
+  --color-accent-hover: #c9521f;
+  --color-dark: #17171a;
+  --color-border: #e2ddd8;
+  --color-error: #c0392b;
+  --color-error-bg: #fdecea;
+  --color-success: #1e7e4f;
+  --color-success-bg: #e8f6ef;
+  --color-info-bg: #eaf2fb;
+  --color-info: #1f5fa8;
+
+  /* Rayons et ombres */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-card: 0 10px 30px -12px rgba(28, 26, 25, 0.35);
+
+  /* Espacements */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+
+  /* Typographie */
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: linear-gradient(160deg, var(--color-gradient-start), var(--color-gradient-end));
+  min-height: 100vh;
+}
+
+/* Accessibilité : un focus toujours visible au clavier (critère RGAA/WCAG) */
+:focus-visible {
+  outline: 3px solid var(--color-dark);
+  outline-offset: 2px;
+}
+
+/* Masque visuellement sans masquer pour les lecteurs d'écran */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,36 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  text-align: center;
+}
+
+.title {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0;
+  max-width: 18rem;
+  line-height: 1.4;
+}
+
+.uploadButton {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-dark);
+  color: #fff;
+  font-size: 1.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.uploadButton:hover {
+  background: #2c2c31;
+  transform: translateY(-2px);
+}

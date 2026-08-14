@@ -1,38 +1,41 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-
-type HealthStatus = {
-  status: string
-  timestamp: string
-}
+import { Route, Routes } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { UploadPage } from './pages/UploadPage';
+import { MyFilesPage } from './pages/MyFilesPage';
+import { DownloadPage } from './pages/DownloadPage';
 
 function App() {
-  const [health, setHealth] = useState<HealthStatus | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json() as Promise<HealthStatus>
-      })
-      .then(setHealth)
-      .catch((err) => setError(err.message))
-  }, [])
-
   return (
-    <main className="app">
-      <h1>DataShare</h1>
-      <p>Vérification de la liaison front / back :</p>
-      {error && <p className="status status-error">Backend injoignable — {error}</p>}
-      {!error && !health && <p className="status">Appel de /api/health…</p>}
-      {health && (
-        <p className="status status-ok">
-          Backend {health.status} — {health.timestamp}
-        </p>
-      )}
-    </main>
-  )
+    <Layout>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/connexion" element={<LoginPage />} />
+        <Route path="/inscription" element={<RegisterPage />} />
+        <Route
+          path="/televersement"
+          element={
+            <ProtectedRoute>
+              <UploadPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mes-fichiers"
+          element={
+            <ProtectedRoute>
+              <MyFilesPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Route publique : accessible à quiconque possède le lien, sans compte */}
+        <Route path="/d/:id" element={<DownloadPage />} />
+      </Routes>
+    </Layout>
+  );
 }
 
-export default App
+export default App;
