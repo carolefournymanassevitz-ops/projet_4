@@ -1,0 +1,96 @@
+# DataShare
+
+Prototype (MVP) de plateforme de transfert sécurisé de fichiers pour freelances et petites
+entreprises : upload avec compte, lien de téléchargement temporaire, protection par mot de
+passe optionnelle, expiration automatique, historique et suppression des fichiers.
+
+## Statut du projet
+
+🟡 **Phase de conception terminée** — architecture, modèle de données et contrat d'interface
+validés. Implémentation du back-end et du front-end à venir.
+
+## Stack technique
+
+| Couche | Choix |
+|---|---|
+| Back-end | Spring Boot (Java 21) |
+| Front-end | React (Vite + TypeScript) |
+| Base de données | PostgreSQL |
+| Stockage fichiers | Système de fichiers local |
+| Authentification | JWT (Spring Security + BCrypt) |
+
+Justification détaillée à venir dans un document dédié (choix technologiques).
+
+## Documentation
+
+| Document | Contenu |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Schéma des briques techniques et flux principaux |
+| [docs/DATA-MODEL.md](docs/DATA-MODEL.md) | MCD (Merise) + schéma relationnel PostgreSQL |
+| [docs/openapi.yaml](docs/openapi.yaml) | Contrat d'interface front/back (OpenAPI 3) |
+| [docs/diagrams.html](docs/diagrams.html) | Rendu visuel des schémas (à ouvrir dans un navigateur) |
+| TESTING.md | À venir — plan de tests, couverture |
+| SECURITY.md | À venir — scan de sécurité, décisions |
+| PERF.md | À venir — tests de performance (k6), budget front |
+| MAINTENANCE.md | À venir — procédures de mise à jour |
+
+## Prérequis
+
+- [Java 21+](https://adoptium.net/) et [Maven 3.9+](https://maven.apache.org/)
+- [Node.js 20+](https://nodejs.org/) et npm
+- [Docker](https://www.docker.com/) + Docker Compose (pour PostgreSQL en local)
+
+## Installation & lancement
+
+> Les répertoires `backend/`, `frontend/` et `deploy/` référencés ci-dessous sont en cours
+> d'implémentation ; ces instructions décrivent le processus cible.
+
+1. **Cloner le dépôt**
+   ```bash
+   git clone <url-du-repo>
+   cd appFullStack
+   ```
+
+2. **Démarrer la base de données** (PostgreSQL via Docker)
+   ```bash
+   docker compose -f deploy/docker-compose.yml up -d
+   ```
+
+3. **Configurer les variables d'environnement**
+   ```bash
+   cp deploy/.env.example .env
+   # renseigner : identifiants PostgreSQL, secret JWT, chemin de stockage des fichiers
+   ```
+
+4. **Lancer le back-end** (API sur `http://localhost:8080`)
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+
+5. **Lancer le front-end** (application sur `http://localhost:5173`)
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+6. **Exécuter les tests back-end**
+   ```bash
+   cd backend
+   mvn test
+   ```
+
+## Structure du dépôt
+
+```
+appFullStack/
+  docs/               Documentation technique (architecture, MCD, OpenAPI)
+  backend/            API Spring Boot (à venir)
+  frontend/           SPA React (à venir)
+  deploy/             docker-compose.yml, scripts de configuration BDD (à venir)
+  TESTING.md          (à venir)
+  SECURITY.md         (à venir)
+  PERF.md             (à venir)
+  MAINTENANCE.md      (à venir)
+```
