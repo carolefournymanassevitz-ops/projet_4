@@ -1,0 +1,708 @@
+<title>Autoévaluation DataShare</title>
+<style>
+  :root {
+    --bg: #faf7f3;
+    --surface: #ffffff;
+    --surface-sunken: #f3ede4;
+    --text: #2b241d;
+    --text-muted: #766a5d;
+    --border: #e6ddd0;
+    --accent: #d9662f;
+    --accent-soft: #f4ddcc;
+    --code-bg: #fbf6ee;
+    --shadow: 0 1px 2px rgba(43, 36, 29, 0.06), 0 8px 24px -12px rgba(43, 36, 29, 0.18);
+
+    --ok-bg: #e2efe4;
+    --ok-fg: #2f6b46;
+    --warn-bg: #f7e7cd;
+    --warn-fg: #8a5b16;
+    --err-bg: #f7dfd9;
+    --err-fg: #a53c28;
+    --neutral-bg: #eae4dc;
+    --neutral-fg: #6b6055;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1613;
+      --surface: #241e19;
+      --surface-sunken: #2c241e;
+      --text: #f3ece2;
+      --text-muted: #b6a999;
+      --border: #3c332b;
+      --accent: #f0895c;
+      --accent-soft: #4a3226;
+      --code-bg: #211b17;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+
+      --ok-bg: #23372c;
+      --ok-fg: #86cba4;
+      --warn-bg: #3d3020;
+      --warn-fg: #e2ab63;
+      --err-bg: #3d2620;
+      --err-fg: #ee9782;
+      --neutral-bg: #302821;
+      --neutral-fg: #a2958a;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1b1613;
+    --surface: #241e19;
+    --surface-sunken: #2c241e;
+    --text: #f3ece2;
+    --text-muted: #b6a999;
+    --border: #3c332b;
+    --accent: #f0895c;
+    --accent-soft: #4a3226;
+    --code-bg: #211b17;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+
+    --ok-bg: #23372c;
+    --ok-fg: #86cba4;
+    --warn-bg: #3d3020;
+    --warn-fg: #e2ab63;
+    --err-bg: #3d2620;
+    --err-fg: #ee9782;
+    --neutral-bg: #302821;
+    --neutral-fg: #a2958a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { background: var(--bg); }
+
+  body {
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  h1, h2, h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1rem; }
+  p { margin: 0; }
+
+  code {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    padding: 0.08em 0.4em;
+    font-size: 0.86em;
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+
+  .brand-mark {
+    width: 2rem; height: 2rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), #f2a56f);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Iowan Old Style", Georgia, serif;
+    font-weight: 700; font-size: 0.85rem;
+  }
+
+  .brand-name { font-weight: 600; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .lede { max-width: 66ch; color: var(--text-muted); font-size: 1.02rem; }
+
+  /* ---------- score ---------- */
+
+  .score {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    box-shadow: var(--shadow);
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  .stat-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .stat-ok .stat-value { color: var(--ok-fg); }
+  .stat-warn .stat-value { color: var(--warn-fg); }
+  .stat-err .stat-value { color: var(--err-fg); }
+  .stat-neutral .stat-value { color: var(--neutral-fg); }
+
+  .meter {
+    display: flex;
+    height: 0.7rem;
+    border-radius: 0.35rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .meter span { display: block; height: 100%; }
+  .meter-ok { background: var(--ok-fg); }
+  .meter-warn { background: var(--warn-fg); }
+  .meter-err { background: var(--err-fg); }
+  .meter-neutral { background: var(--neutral-fg); }
+
+  .meter-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .meter-legend span { display: flex; align-items: center; gap: 0.35rem; }
+
+  .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; display: inline-block; }
+  .dot-ok { background: var(--ok-fg); }
+  .dot-warn { background: var(--warn-fg); }
+  .dot-err { background: var(--err-fg); }
+  .dot-neutral { background: var(--neutral-fg); }
+
+  /* ---------- sections ---------- */
+
+  section { display: flex; flex-direction: column; gap: 1rem; }
+
+  .section-head { display: flex; flex-direction: column; gap: 0.35rem; }
+  .section-head p { color: var(--text-muted); max-width: 72ch; font-size: 0.94rem; }
+
+  .block-ref {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  /* ---------- tableaux ---------- */
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    background: var(--surface);
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+  th, td {
+    text-align: left;
+    padding: 0.62rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  thead th {
+    background: var(--surface-sunken);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  td.status { white-space: nowrap; width: 1%; }
+
+  .sub { padding-left: 1.6rem; position: relative; }
+  .sub::before {
+    content: "└";
+    position: absolute;
+    left: 0.55rem;
+    color: var(--text-muted);
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.35rem;
+    white-space: nowrap;
+  }
+
+  .pill-ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .pill-warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .pill-err { background: var(--err-bg); color: var(--err-fg); }
+  .pill-neutral { background: var(--neutral-bg); color: var(--neutral-fg); }
+
+  .evidence { color: var(--text-muted); font-size: 0.86rem; }
+
+  /* ---------- plan d'action ---------- */
+
+  .actions { display: flex; flex-direction: column; gap: 0.85rem; }
+
+  .action {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.6rem;
+    padding: 0.95rem 1.15rem;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  .action-rank {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0.35rem;
+    text-align: center;
+    padding: 0.2rem 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .action-body { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+  .action-body p { font-size: 0.88rem; color: var(--text-muted); }
+
+  .note {
+    background: var(--accent-soft);
+    border-radius: 0.7rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .note strong { color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 2.25rem 1rem 3.5rem; }
+    h1 { font-size: 1.7rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="page-header">
+    <div class="brand">
+      <span class="brand-mark">DS</span>
+      <span class="brand-name">DataShare</span>
+    </div>
+    <p class="eyebrow">Autoévaluation — Pilotez le développement d'une solution informatique</p>
+    <h1>État des livrables</h1>
+    <p class="lede">
+      Vérification des 57 indicateurs de la fiche d'autoévaluation, confrontés au contenu
+      réel du dépôt au 21/08/2026. Chaque statut s'appuie sur une preuve vérifiable dans le
+      code ou la documentation — pas sur une intention.
+    </p>
+  </header>
+
+  <!-- ============ SYNTHÈSE ============ -->
+  <section>
+    <div class="score">
+      <div class="stat stat-ok">
+        <span class="stat-value">22</span>
+        <span class="stat-label">Acquis</span>
+      </div>
+      <div class="stat stat-warn">
+        <span class="stat-value">11</span>
+        <span class="stat-label">Partiels</span>
+      </div>
+      <div class="stat stat-err">
+        <span class="stat-value">23</span>
+        <span class="stat-label">Manquants</span>
+      </div>
+      <div class="stat stat-neutral">
+        <span class="stat-value">1</span>
+        <span class="stat-label">À vérifier</span>
+      </div>
+    </div>
+
+    <div class="meter" role="img" aria-label="22 indicateurs acquis, 11 partiels, 23 manquants, 1 à vérifier sur 57">
+      <span class="meter-ok" style="width: 38.6%"></span>
+      <span class="meter-warn" style="width: 19.3%"></span>
+      <span class="meter-err" style="width: 40.4%"></span>
+      <span class="meter-neutral" style="width: 1.7%"></span>
+    </div>
+
+    <div class="meter-legend">
+      <span><i class="dot dot-ok"></i> Acquis — preuve dans le dépôt</span>
+      <span><i class="dot dot-warn"></i> Partiel — fait mais incomplet ou non documenté</span>
+      <span><i class="dot dot-err"></i> Manquant — rien dans le dépôt</span>
+      <span><i class="dot dot-neutral"></i> À vérifier par toi</span>
+    </div>
+
+    <p class="note">
+      <strong>Lecture d'ensemble —</strong> le <em>code</em> est en bonne santé : architecture
+      en couches, sécurité correcte, API fonctionnelle de bout en bout. Ce qui manque est
+      presque entièrement du côté <em>tests</em> et <em>documentation</em>. Autrement dit,
+      tu as construit la maison mais pas encore rédigé le carnet d'entretien ni fait passer
+      le contrôle technique.
+    </p>
+  </section>
+
+  <!-- ============ BLOC 1 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 1</span>
+      <h2>Définir l'architecture front-end</h2>
+      <p>Le schéma global existe et il est bon. C'est la partie front qui n'y est traitée qu'en une ligne, et la justification des choix qui manque entièrement.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Schéma d'architecture montrant les briques</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence"><code>ARCHITECTURE.md</code> + rendu visuel <code>diagrams.html</code></td>
+          </tr>
+          <tr>
+            <td class="sub">l'architecture front</td>
+            <td class="status"><span class="pill pill-warn">Partiel</span></td>
+            <td class="evidence">Une seule ligne « SPA React » dans le tableau des briques. L'organisation interne n'est pas décrite.</td>
+          </tr>
+          <tr>
+            <td class="sub">les interactions front / back</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Flux détaillés + diagramme avec JWT bearer et JSON</td>
+          </tr>
+          <tr>
+            <td>Organisation du code front modulaire</td>
+            <td class="status"><span class="pill pill-warn">Partiel</span></td>
+            <td class="evidence"><strong>Fait dans le code</strong> (<code>components/</code>, <code>services/</code>, <code>store/</code> Redux Toolkit, <code>utils/</code>) mais <strong>nulle part documenté</strong>.</td>
+          </tr>
+          <tr>
+            <td>Choix techniques du front documentés</td>
+            <td class="status"><span class="pill pill-err">Manquant</span></td>
+            <td class="evidence">Les technos sont listées, jamais expliquées. Une liste n'est pas une documentation de choix.</td>
+          </tr>
+          <tr>
+            <td class="sub">justification de chaque choix</td>
+            <td class="status"><span class="pill pill-err">Manquant</span></td>
+            <td class="evidence">Le README annonce « Justification détaillée à venir dans un document dédié »</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 2 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 2</span>
+      <h2>Développer les composants et interfaces</h2>
+      <p>Le bloc le plus solide. L'application fonctionne de bout en bout, la gestion d'erreurs est propre depuis les correctifs d'aujourd'hui.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Communication front / back via API documentées</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Vérifié en direct : register, login, JWT, liste des fichiers</td>
+          </tr>
+          <tr>
+            <td>Écrans conformes aux maquettes</td>
+            <td class="status"><span class="pill pill-neutral">À vérifier</span></td>
+            <td class="evidence">Je n'ai pas les maquettes dans le dépôt — à confronter toi-même, et à joindre au repo.</td>
+          </tr>
+          <tr>
+            <td>Interface responsive</td>
+            <td class="status"><span class="pill pill-warn">Partiel</span></td>
+            <td class="evidence">Seulement 2 <code>@media</code> dans tout le front (<code>Layout</code>, <code>FileRow</code>). À tester sur mobile.</td>
+          </tr>
+          <tr>
+            <td>Expérience fluide, sans erreur bloquante</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Le blocage 403 sur l'authentification est corrigé</td>
+          </tr>
+          <tr>
+            <td>Bonnes pratiques d'accessibilité</td>
+            <td class="status"><span class="pill pill-warn">Partiel</span></td>
+            <td class="evidence">21 attributs ARIA (<code>role</code>, <code>aria-selected</code>, <code>aria-describedby</code>…). Base saine, mais aucun audit RGAA/WCAG formalisé.</td>
+          </tr>
+          <tr>
+            <td>Gestion robuste des erreurs côté interface</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence"><code>ApiError</code>, composant <code>Alert</code>, état d'erreur par page, messages en français</td>
+          </tr>
+          <tr>
+            <td>Démontrer le bon fonctionnement des interfaces</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Parcours complet démontrable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 3 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 3</span>
+      <h2>Analyser puis concevoir l'API</h2>
+      <p>Bloc quasiment complet. Le contrat OpenAPI est cohérent avec le code réel — y compris le préfixe <code>/api</code>, ce qui est souvent une source d'écart.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td>Endpoints documentés (OpenAPI)</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>openapi.yaml</code> — 6 chemins, cohérents avec les contrôleurs</td></tr>
+          <tr><td>Schéma d'architecture des briques</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>ARCHITECTURE.md</code></td></tr>
+          <tr><td class="sub">l'architecture back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Couches Controller / Service / Repository explicitées</td></tr>
+          <tr><td class="sub">l'API et les interactions front / back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Flux upload, téléchargement, expiration</td></tr>
+          <tr><td class="sub">la BDD</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DATA-MODEL.md</code> — MCD Merise + MLD PostgreSQL</td></tr>
+          <tr><td>L'API respecte les schémas et formats REST/JSON</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Les réponses nominales sont conformes, mais le format d'erreur normalisé <code>{ timestamp, status, message }</code> n'est pas décrit dans l'OpenAPI.</td></tr>
+          <tr><td>L'API permet la communication front / back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Vérifié bout en bout</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 4 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 4</span>
+      <h2>Superviser et implémenter le back-end</h2>
+      <p>Le code est conforme aux attentes. Ce sont les trois indicateurs de documentation — dont l'usage de l'IA, explicitement demandé — qui sont vides.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td>Choix techniques du back documentés</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun document ne justifie Spring Boot 4, JWT plutôt que session, stockage disque plutôt qu'objet</td></tr>
+          <tr><td class="sub">justification de chaque choix</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
+          <tr><td>Expliquer l'utilisation de l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune trace écrite, alors que c'est un indicateur explicite du référentiel</td></tr>
+          <tr><td>Back structuré en couches séparées</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Packages <code>auth</code>, <code>file</code>, <code>user</code>, <code>security</code>, <code>config</code>, <code>web</code> — logique métier, accès données et services bien séparés</td></tr>
+          <tr><td>Données sensibles sécurisées</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">BCrypt sur les mots de passe utilisateur <em>et</em> fichier, JWT signé HS256</td></tr>
+          <tr><td>Opérations critiques sans bug bloquant</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Le blocage authentification est levé</td></tr>
+          <tr><td>Bonnes pratiques de développement</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Injection par constructeur, DTO en records, Flyway, <code>open-in-view: false</code></td></tr>
+          <tr><td>Démontrer le bon fonctionnement</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Démontrable en direct</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 5 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 5</span>
+      <h2>Mettre en œuvre les tests</h2>
+      <p>Le point noir du projet : <strong>huit indicateurs sur huit sont vides</strong>. Le seul test existant vérifie que le contexte Spring démarre.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td>Procédures de tests décrites</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><code>TESTING.md</code> n'existe pas</td></tr>
+          <tr><td>Référence aux rapports de tests et de couverture</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
+          <tr><td class="sub">tests sur l'upload</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun</td></tr>
+          <tr><td class="sub">tests sur le téléchargement</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun</td></tr>
+          <tr><td class="sub">tests sur l'authentification</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun — le bug 403 aurait été capturé par un simple test d'inscription</td></tr>
+          <tr><td>Les tests ont permis de détecter des anomalies</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Les anomalies ont été trouvées à la main, pas par des tests</td></tr>
+          <tr><td>Rapports de tests et de couverture inclus</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Pas de JaCoCo dans <code>pom.xml</code> — la couverture n'est pas mesurable en l'état</td></tr>
+          <tr><td>Stabilité vérifiée, pas de régressions</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun filet de sécurité automatisé</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 6 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 6</span>
+      <h2>Performance, conformité et maintenance</h2>
+      <p>Les messages d'erreur et l'ergonomie ont progressé aujourd'hui. La performance n'a jamais été mesurée, et le rapport de revue du code écrit par l'IA reste à produire.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td>Procédures de maintenance décrites</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><code>MAINTENANCE.md</code> n'existe pas</td></tr>
+          <tr><td>Référence au rapport de revue du code IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
+          <tr><td>Application exploitable sans bug bloquant</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Vérifié ce matin</td></tr>
+          <tr><td>Code lisible, organisé, documenté</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Commentaires en français expliquant les intentions, nommage cohérent</td></tr>
+          <tr><td>Bonnes pratiques de sécurité (XSS, CSRF, injections)</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Injections couvertes par JPA. Mais CSRF désactivé sans justification écrite, JWT en <code>localStorage</code>, aucune limitation des tentatives de connexion.</td></tr>
+          <tr><td>Rapport de revue technique du code écrit par l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Livrable explicitement exigé</td></tr>
+          <tr><td class="sub">optimisation de la performance</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune mesure, aucun budget front</td></tr>
+          <tr><td class="sub">optimisation des messages d'erreur</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>GlobalExceptionHandler</code> + messages de validation en français</td></tr>
+          <tr><td class="sub">optimisation de l'ergonomie</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Retour visuel de copie du lien corrigé, mais aucune démarche d'ensemble documentée</td></tr>
+          <tr><td>Démontrer la bonne performance</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Rien à montrer sans mesure</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ BLOC 7 ============ -->
+  <section>
+    <div class="section-head">
+      <span class="block-ref">COMPÉTENCE 7</span>
+      <h2>Rédiger la documentation technique</h2>
+      <p>Les documents de conception sont bons, mais le README — la porte d'entrée du projet — est resté figé à la phase de conception.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td class="sub">diagramme simple de l'architecture</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>ARCHITECTURE.md</code></td></tr>
+          <tr><td class="sub">choix technologiques justifiés</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Listés, pas justifiés</td></tr>
+          <tr><td class="sub">modèle de données</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DATA-MODEL.md</code></td></tr>
+          <tr><td class="sub">documentation API</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>openapi.yaml</code></td></tr>
+          <tr><td class="sub">sécurité, qualité, installation, usage de l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun de ces quatre volets n'est rédigé</td></tr>
+          <tr><td>Doc permettant à un dev tiers de reprendre le projet</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">La conception est claire, mais rien n'explique le code livré</td></tr>
+          <tr><td class="sub">README — installation</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Présent mais préfixé « processus cible, en cours d'implémentation »</td></tr>
+          <tr><td class="sub">README — lancement</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Commandes correctes, mais <code>mvn</code> au lieu de <code>./mvnw</code></td></tr>
+          <tr><td class="sub">README — utilisation</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune section n'explique comment se servir de l'application</td></tr>
+          <tr><td>Le README permet une reprise facile</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><strong>Tous les liens documentaires sont cassés</strong> : ils pointent vers <code>docs/</code> alors que le dossier s'appelle <code>g.docs/</code>. Le statut affiché est « implémentation à venir » alors que tout est codé.</td></tr>
+          <tr><td class="sub">scripts de déploiement</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence"><code>docker-compose.yml</code> + <code>.env.example</code> pour PostgreSQL seulement — rien pour déployer l'application</td></tr>
+          <tr><td class="sub">TESTING.md, SECURITY.md, PERF.md, MAINTENANCE.md</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Les quatre fichiers sont absents</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ INCOHÉRENCES ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Deux incohérences à corriger en priorité</h2>
+      <p>Ces points ne sont pas des manques, mais des contradictions internes qu'un évaluateur attentif repérera.</p>
+    </div>
+    <div class="actions">
+      <article class="action">
+        <span class="action-rank">!</span>
+        <div class="action-body">
+          <h3>La documentation décrit une brique qui n'existe pas</h3>
+          <p><code>ARCHITECTURE.md</code> présente une « tâche planifiée <code>@Scheduled</code> » de purge des fichiers expirés, et le diagramme la représente. Or aucune annotation <code>@Scheduled</code> n'existe dans le code — la purge est hors périmètre MVP. Soit tu l'implémentes, soit tu la retires du schéma en la signalant comme évolution prévue.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">!</span>
+        <div class="action-body">
+          <h3>Le README décrit un projet qui n'existe plus</h3>
+          <p>Il annonce « Phase de conception terminée — implémentation à venir », présente <code>backend/</code> et <code>frontend/</code> comme « à venir », et tous ses liens pointent vers <code>docs/</code> au lieu de <code>g.docs/</code>. C'est le premier fichier que lira ton évaluateur.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ PLAN D'ACTION ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Plan d'action, par ordre de rentabilité</h2>
+      <p>Classé par rapport entre points d'évaluation gagnés et temps investi.</p>
+    </div>
+
+    <div class="actions">
+      <article class="action">
+        <span class="action-rank">1</span>
+        <div class="action-body">
+          <h3>Réécrire le README</h3>
+          <p>Une heure de travail qui débloque quatre indicateurs et corrige la première impression. Statut réel, liens vers <code>g.docs/</code>, section « utilisation », commandes <code>./mvnw</code>.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">2</span>
+        <div class="action-body">
+          <h3>Écrire les tests des trois fonctionnalités critiques</h3>
+          <p>Authentification, upload, téléchargement. C'est le bloc le plus lourdement sanctionné — huit indicateurs — et le plus long à rattraper. Ajouter JaCoCo au <code>pom.xml</code> rend la couverture mesurable, donc le rapport livrable.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">3</span>
+        <div class="action-body">
+          <h3>Créer les quatre fichiers de suivi qualité</h3>
+          <p><code>TESTING.md</code>, <code>SECURITY.md</code>, <code>PERF.md</code>, <code>MAINTENANCE.md</code>. Ils sont nommément exigés. <code>SECURITY.md</code> peut réutiliser directement les écarts déjà relevés dans les cas d'usage.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">4</span>
+        <div class="action-body">
+          <h3>Documenter les choix techniques et l'usage de l'IA</h3>
+          <p>Un <code>DECISIONS.md</code> répondant à « pourquoi ce choix, quelles alternatives écartées » couvre quatre indicateurs. Le volet IA est un indicateur distinct : décris ta méthode de supervision — c'est exactement ce que tu as pratiqué ce matin en refusant les diagnostics non prouvés.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">5</span>
+        <div class="action-body">
+          <h3>Renforcer le responsive et l'accessibilité</h3>
+          <p>Deux <code>@media</code> pour toute l'application, c'est peu. Un passage au clavier et un audit Lighthouse fourniront des preuves concrètes à citer.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">6</span>
+        <div class="action-body">
+          <h3>Mesurer la performance</h3>
+          <p>Sans chiffre, l'indicateur « démontrer la bonne performance » est indéfendable. Quelques mesures sur l'upload d'un gros fichier et un Lighthouse sur le front suffisent pour un MVP.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    Audit réalisé le 21/08/2026 sur le dépôt <code>appFullStack</code>, branche de travail locale.
+    Neuf fichiers modifiés ou créés ne sont pas encore commités — pense à les intégrer avant le dépôt des livrables.
+    Voir aussi <code>g.docs/USE-CASES.md</code> et <code>g.docs/use-cases.html</code>.
+  </footer>
+
+</div>

@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { Field } from '../components/Field';
 import { ApiError } from '../services/http';
 import { filesService } from '../services/files.service';
+import { copyToClipboard } from '../utils/clipboard';
 import { formatBytes } from '../utils/format';
 import styles from './forms.module.css';
 import homeStyles from './HomePage.module.css';
@@ -59,9 +60,13 @@ export function UploadPage() {
 
   async function handleCopyLink() {
     if (!downloadUrl) return;
-    await navigator.clipboard.writeText(downloadUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+
+    if (await copyToClipboard(downloadUrl)) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      setError('La copie automatique a échoué. Sélectionne le lien ci-dessus pour le copier à la main.');
+    }
   }
 
   function resetToSelection() {
@@ -102,6 +107,8 @@ export function UploadPage() {
           Félicitations, ton fichier sera conservé chez nous pendant{' '}
           {EXPIRATION_OPTIONS.find((o) => o.value === expirationDays)?.label.toLowerCase()} !
         </Alert>
+        {error && <Alert variant="error">{error}</Alert>}
+
         <a className={styles.shareLink} href={downloadUrl}>
           {downloadUrl}
         </a>

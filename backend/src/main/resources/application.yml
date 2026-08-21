@@ -29,3 +29,6 @@ app:
   upload:
     max-size-bytes: 1073741824 # 1 Go
     forbidden-extensions: exe,bat,sh,cmd,msi
+
+
+

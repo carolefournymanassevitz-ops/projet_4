@@ -7,11 +7,13 @@ type FileRowProps = {
   file: FileHistoryItem;
   onDelete: (id: string) => void;
   onCopyLink: (id: string) => void;
+  /** Vrai juste après une copie réussie du lien de ce fichier. */
+  copied?: boolean;
 };
 
 /** Composant purement présentationnel : il ne sait ni supprimer, ni appeler l'API.
  *  Il remonte l'intention (onDelete / onCopyLink) à la page qui l'utilise. */
-export function FileRow({ file, onDelete, onCopyLink }: FileRowProps) {
+export function FileRow({ file, onDelete, onCopyLink, copied = false }: FileRowProps) {
   return (
     <li className={styles.row}>
       <span className={styles.icon} aria-hidden="true">
@@ -33,7 +35,7 @@ export function FileRow({ file, onDelete, onCopyLink }: FileRowProps) {
         </span>
         {!file.expired && (
           <Button variant="ghost" onClick={() => onCopyLink(file.id)}>
-            Copier le lien
+            {copied ? 'Lien copié ✓' : 'Copier le lien'}
           </Button>
         )}
         <Button

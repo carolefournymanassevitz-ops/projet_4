@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { FileRow } from '../components/FileRow';
 import { ApiError } from '../services/http';
 import { filesService, type FileHistoryItem } from '../services/files.service';
+import { copyToClipboard } from '../utils/clipboard';
 import styles from './MyFilesPage.module.css';
 
 type Tab = 'active' | 'expired';
@@ -15,6 +16,7 @@ export function MyFilesPage() {
   const [tab, setTab] = useState<Tab>('active');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +50,14 @@ export function MyFilesPage() {
   }
 
   async function handleCopyLink(id: string) {
-    await navigator.clipboard.writeText(`${window.location.origin}/d/${id}`);
+    if (await copyToClipboard(`${window.location.origin}/d/${id}`)) {
+      // Retour visuel temporaire sur la ligne concernée : sans ça, l'utilisateur
+      // ne sait pas si son clic a fait quelque chose.
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } else {
+      setError('La copie du lien a échoué. Ouvre le fichier pour récupérer son lien.');
+    }
   }
 
   const visibleFiles = useMemo(
@@ -91,7 +100,13 @@ export function MyFilesPage() {
       ) : (
         <ul className={styles.list}>
           {visibleFiles.map((file) => (
-            <FileRow key={file.id} file={file} onDelete={handleDelete} onCopyLink={handleCopyLink} />
+            <FileRow
+              key={file.id}
+              file={file}
+              onDelete={handleDelete}
+              onCopyLink={handleCopyLink}
+              copied={copiedId === file.id}
+            />
           ))}
         </ul>
       )}

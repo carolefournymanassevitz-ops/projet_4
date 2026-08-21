@@ -1,0 +1,1120 @@
+<title>Cas d'utilisation DataShare</title>
+<style>
+  :root {
+    --bg: #faf7f3;
+    --surface: #ffffff;
+    --surface-sunken: #f3ede4;
+    --text: #2b241d;
+    --text-muted: #766a5d;
+    --border: #e6ddd0;
+    --accent: #d9662f;
+    --accent-soft: #f4ddcc;
+    --code-bg: #fbf6ee;
+    --shadow: 0 1px 2px rgba(43, 36, 29, 0.06), 0 8px 24px -12px rgba(43, 36, 29, 0.18);
+
+    --ok-bg: #e2efe4;
+    --ok-fg: #2f6b46;
+    --warn-bg: #f7e7cd;
+    --warn-fg: #8a5b16;
+    --err-bg: #f7dfd9;
+    --err-fg: #a53c28;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b1613;
+      --surface: #241e19;
+      --surface-sunken: #2c241e;
+      --text: #f3ece2;
+      --text-muted: #b6a999;
+      --border: #3c332b;
+      --accent: #f0895c;
+      --accent-soft: #4a3226;
+      --code-bg: #211b17;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+
+      --ok-bg: #23372c;
+      --ok-fg: #86cba4;
+      --warn-bg: #3d3020;
+      --warn-fg: #e2ab63;
+      --err-bg: #3d2620;
+      --err-fg: #ee9782;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1b1613;
+    --surface: #241e19;
+    --surface-sunken: #2c241e;
+    --text: #f3ece2;
+    --text-muted: #b6a999;
+    --border: #3c332b;
+    --accent: #f0895c;
+    --accent-soft: #4a3226;
+    --code-bg: #211b17;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+
+    --ok-bg: #23372c;
+    --ok-fg: #86cba4;
+    --warn-bg: #3d3020;
+    --warn-fg: #e2ab63;
+    --err-bg: #3d2620;
+    --err-fg: #ee9782;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { background: var(--bg); }
+
+  body {
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  .page {
+    max-width: 940px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  h1, h2, h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    color: var(--text);
+    margin: 0;
+  }
+
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.45rem; }
+  h3 { font-size: 1.02rem; }
+
+  p { margin: 0; }
+
+  a { color: var(--accent); }
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 0.2rem;
+  }
+
+  code {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    padding: 0.08em 0.4em;
+    font-size: 0.88em;
+  }
+
+  /* ---------- en-tête ---------- */
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+
+  .brand-mark {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), #f2a56f);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Iowan Old Style", Georgia, serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .brand-name { font-weight: 600; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .lede {
+    max-width: 64ch;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+  }
+
+  /* ---------- sections ---------- */
+
+  section { display: flex; flex-direction: column; gap: 1.1rem; }
+
+  .section-head { display: flex; flex-direction: column; gap: 0.4rem; }
+  .section-head p { color: var(--text-muted); max-width: 70ch; }
+
+  /* ---------- tableaux ---------- */
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  thead th {
+    background: var(--surface-sunken);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ---------- pastilles ---------- */
+
+  .pill {
+    display: inline-block;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.12rem 0.5rem;
+    border-radius: 0.35rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pill-ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .pill-warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .pill-err { background: var(--err-bg); color: var(--err-fg); }
+  .pill-none { background: var(--surface-sunken); color: var(--text-muted); }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.35rem;
+    background: var(--surface-sunken);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .tag-auth { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
+  /* ---------- acteurs ---------- */
+
+  .actors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .actor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .actor-card h3 { font-size: 1rem; }
+  .actor-card p { font-size: 0.89rem; color: var(--text-muted); }
+
+  /* ---------- diagrammes ---------- */
+
+  .diagram-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .diagram-card .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: 520px;
+  }
+
+  /* ---------- fiche de cas d'usage ---------- */
+
+  .uc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uc-head {
+    background: var(--surface-sunken);
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .uc-ref {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .uc-goal { font-size: 0.92rem; color: var(--text-muted); max-width: 70ch; }
+
+  .uc-body {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .uc-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.9rem;
+    margin: 0;
+  }
+
+  .uc-meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .uc-meta dt {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .uc-meta dd {
+    margin: 0;
+    font-size: 0.88rem;
+    overflow-wrap: anywhere;
+  }
+
+  .block { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .block-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  /* étapes numérotées du scénario nominal */
+  .flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    counter-reset: step;
+  }
+
+  .flow li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.65rem 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    font-size: 0.92rem;
+    position: relative;
+  }
+
+  .flow li::before {
+    content: counter(step);
+    grid-column: 1;
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* trait de liaison entre les étapes */
+  .flow li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 0.8rem;
+    top: 1.75rem;
+    bottom: -0.55rem;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .plain {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.92rem;
+  }
+
+  .plain li::marker { color: var(--accent); }
+
+  .rg { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .rg li {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    align-items: start;
+  }
+
+  .rg-ref {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0.3rem;
+    padding: 0.12rem 0.35rem;
+    text-align: center;
+  }
+
+  .post {
+    background: var(--surface-sunken);
+    border-radius: 0.6rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.89rem;
+  }
+
+  .post strong { color: var(--accent); }
+
+  /* ---------- écarts ---------- */
+
+  .gaps { display: flex; flex-direction: column; gap: 0.9rem; }
+
+  .gap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.6rem;
+    padding: 0.95rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .gap h3 { font-size: 0.96rem; }
+  .gap p { font-size: 0.89rem; color: var(--text-muted); }
+
+  .note {
+    background: var(--accent-soft);
+    border-radius: 0.7rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .note strong { color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 2.25rem 1rem 3.5rem; }
+    h1 { font-size: 1.7rem; }
+    .rg li { grid-template-columns: 3.6rem 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="page-header">
+    <div class="brand">
+      <span class="brand-mark">DS</span>
+      <span class="brand-name">DataShare</span>
+    </div>
+    <p class="eyebrow">Documentation fonctionnelle — MVP</p>
+    <h1>Cas d'utilisation</h1>
+    <p class="lede">
+      Les six cas d'usage du prototype, de l'inscription à la suppression d'un fichier.
+      Chaque fiche décrit le scénario nominal, les exceptions avec leur code HTTP réel, et
+      les règles de gestion applicables. Périmètre US01 à US06 ; les fonctionnalités
+      avancées sont hors MVP.
+    </p>
+    <p class="note">
+      <strong>Relevé dans le code —</strong> ce document décrit le comportement
+      effectivement implémenté au 21/08/2026, et non une cible théorique. Messages d'erreur,
+      seuils et codes de retour sont ceux que l'application produit. Sources :
+      <code>USE-CASES.md</code>, <code>openapi.yaml</code>.
+    </p>
+  </header>
+
+  <!-- ============ VUE D'ENSEMBLE ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Vue d'ensemble</h2>
+      <p>Correspondance entre les cas d'utilisation, les user stories du cahier des charges et les acteurs concernés.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Réf.</th>
+            <th>Cas d'utilisation</th>
+            <th>US</th>
+            <th>Acteur</th>
+            <th>Compte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>UC01</code></td><td>Créer un compte</td><td>US01</td><td>Visiteur</td><td><span class="tag">Non</span></td></tr>
+          <tr><td><code>UC02</code></td><td>Se connecter</td><td>US01</td><td>Visiteur</td><td><span class="tag">Non</span></td></tr>
+          <tr><td><code>UC03</code></td><td>Déposer un fichier et obtenir un lien</td><td>US02</td><td>Utilisateur inscrit</td><td><span class="tag tag-auth">Requis</span></td></tr>
+          <tr><td><code>UC04</code></td><td>Télécharger un fichier via un lien</td><td>US03 / US04</td><td>Destinataire</td><td><span class="tag">Non</span></td></tr>
+          <tr><td><code>UC05</code></td><td>Consulter l'historique de ses fichiers</td><td>US05</td><td>Utilisateur inscrit</td><td><span class="tag tag-auth">Requis</span></td></tr>
+          <tr><td><code>UC06</code></td><td>Supprimer un fichier</td><td>US06</td><td>Utilisateur inscrit</td><td><span class="tag tag-auth">Requis</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="diagram-card">
+      <pre class="mermaid">
+flowchart LR
+    V(("Visiteur"))
+    U(("Utilisateur<br/>inscrit"))
+    D(("Destinataire"))
+
+    subgraph SYS["Système DataShare"]
+        direction TB
+        UC01(["UC01 · Créer un compte"])
+        UC02(["UC02 · Se connecter"])
+        UC03(["UC03 · Déposer un fichier"])
+        UC05(["UC05 · Consulter l'historique"])
+        UC06(["UC06 · Supprimer un fichier"])
+        UC04(["UC04 · Télécharger via un lien"])
+    end
+
+    V --> UC01
+    V --> UC02
+    UC01 -. enchaîne .-> UC02
+    U --> UC03
+    U --> UC05
+    U --> UC06
+    UC05 -. lien copié .-> UC04
+    D --> UC04
+      </pre>
+    </div>
+  </section>
+
+  <!-- ============ ACTEURS ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Acteurs</h2>
+      <p>Le destinataire n'est pas un rôle technique distinct : c'est un visiteur qui détient un lien de partage.</p>
+    </div>
+
+    <div class="actors">
+      <article class="actor-card">
+        <h3>Visiteur</h3>
+        <p>Internaute sans compte. Peut s'inscrire, se connecter, et télécharger un fichier s'il détient un lien.</p>
+        <span class="tag">Aucune authentification</span>
+      </article>
+      <article class="actor-card">
+        <h3>Utilisateur inscrit</h3>
+        <p>Le déposant. Téléverse des fichiers, consulte son historique et supprime ses fichiers.</p>
+        <span class="tag tag-auth">Jeton JWT requis</span>
+      </article>
+      <article class="actor-card">
+        <h3>Destinataire</h3>
+        <p>Personne à qui le déposant transmet un lien. Aucun compte n'est nécessaire pour télécharger.</p>
+        <span class="tag">Aucune authentification</span>
+      </article>
+      <article class="actor-card">
+        <h3>Système</h3>
+        <p>API Spring Boot, base PostgreSQL et stockage de fichiers sur le disque du serveur.</p>
+        <span class="tag">Acteur secondaire</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ UC01 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC01 — US01</span>
+        <h2>Créer un compte</h2>
+        <p class="uc-goal">Permettre à un visiteur d'ouvrir un compte pour pouvoir déposer des fichiers.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Visiteur</dd></div>
+          <div><dt>Écran</dt><dd><code>/inscription</code></dd></div>
+          <div><dt>Endpoint</dt><dd><code>POST /api/auth/register</code></dd></div>
+          <div><dt>Précondition</dt><dd>Email non déjà rattaché à un compte</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>Le visiteur ouvre la page d'inscription.</li>
+            <li>Il saisit une adresse email et un mot de passe d'au moins 8 caractères.</li>
+            <li>Il valide le formulaire.</li>
+            <li>Le système vérifie le format de l'email et la longueur du mot de passe.</li>
+            <li>Le système vérifie qu'aucun compte n'existe pour cet email.</li>
+            <li>Le système hache le mot de passe en BCrypt et enregistre l'utilisateur.</li>
+            <li>Le système répond <code>201 Created</code>.</li>
+            <li>Le front enchaîne automatiquement la connexion, sans ressaisie des identifiants.</li>
+            <li>L'utilisateur est redirigé vers « Mes fichiers ».</li>
+          </ol>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Email déjà rattaché à un compte</td><td><span class="pill pill-warn">409</span></td><td>Email déjà utilisé</td></tr>
+                <tr><td>Format d'email invalide</td><td><span class="pill pill-warn">400</span></td><td>Le format de l'email est invalide.</td></tr>
+                <tr><td>Mot de passe trop court</td><td><span class="pill pill-warn">400</span></td><td>Le mot de passe doit contenir au moins 8 caractères.</td></tr>
+                <tr><td>Champ obligatoire vide</td><td><span class="pill pill-warn">400</span></td><td>L'email est obligatoire.</td></tr>
+                <tr><td>API injoignable</td><td><span class="pill pill-none">—</span></td><td>Le service est momentanément indisponible.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG01</span><span>L'email est unique : contrainte <code>UNIQUE</code> en base <em>et</em> contrôle applicatif renvoyant un 409 explicite.</span></li>
+            <li><span class="rg-ref">RG02</span><span>Le mot de passe fait au minimum 8 caractères.</span></li>
+            <li><span class="rg-ref">RG03</span><span>Le mot de passe n'est jamais stocké en clair : empreinte BCrypt de 60 caractères.</span></li>
+            <li><span class="rg-ref">RG04</span><span>Une inscription réussie enchaîne systématiquement sur la connexion.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> une ligne existe dans <code>users</code> (UUID, email unique, empreinte BCrypt, date de création). L'utilisateur est connecté.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ UC02 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC02 — US01</span>
+        <h2>Se connecter</h2>
+        <p class="uc-goal">Ouvrir une session authentifiée donnant accès aux fonctions réservées aux titulaires d'un compte.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Visiteur disposant d'un compte</dd></div>
+          <div><dt>Écran</dt><dd><code>/connexion</code></dd></div>
+          <div><dt>Endpoint</dt><dd><code>POST /api/auth/login</code></dd></div>
+          <div><dt>Durée de session</dt><dd>1 heure</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>Le visiteur saisit son email et son mot de passe.</li>
+            <li>Le système recherche le compte correspondant à l'email.</li>
+            <li>Le système compare le mot de passe fourni à l'empreinte enregistrée.</li>
+            <li>Le système génère un jeton JWT et répond <code>200</code> avec le jeton, sa durée de validité et l'identité.</li>
+            <li>Le front conserve le jeton et l'identité dans le stockage local du navigateur.</li>
+            <li>L'utilisateur est redirigé vers « Mes fichiers ».</li>
+          </ol>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Compte inexistant</td><td><span class="pill pill-err">401</span></td><td>Identifiants invalides</td></tr>
+                <tr><td>Mot de passe incorrect</td><td><span class="pill pill-err">401</span></td><td>Identifiants invalides</td></tr>
+                <tr><td>Champ vide ou email malformé</td><td><span class="pill pill-warn">400</span></td><td>Message de validation correspondant</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG05</span><span>Le message est <em>volontairement identique</em> pour un compte inexistant et un mot de passe incorrect : distinguer les deux permettrait d'énumérer les comptes existants.</span></li>
+            <li><span class="rg-ref">RG06</span><span>Le jeton JWT porte l'identifiant utilisateur, l'email, la date d'émission et la date d'expiration.</span></li>
+            <li><span class="rg-ref">RG07</span><span>Toute requête protégée transporte l'en-tête <code>Authorization: Bearer &lt;token&gt;</code>.</span></li>
+            <li><span class="rg-ref">RG08</span><span>Un jeton absent, expiré ou altéré n'interrompt pas la requête : elle poursuit en tant qu'anonyme, et la configuration de sécurité tranche.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> session valable 1 heure, persistée au rafraîchissement de page. La déconnexion purge le stockage local.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ UC03 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC03 — US02</span>
+        <h2>Déposer un fichier et obtenir un lien</h2>
+        <p class="uc-goal">Téléverser un fichier, définir sa durée de validité et sa protection éventuelle, puis récupérer un lien à transmettre.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Utilisateur inscrit</dd></div>
+          <div><dt>Écran</dt><dd><code>/televersement</code></dd></div>
+          <div><dt>Endpoint</dt><dd><code>POST /api/files</code> (multipart)</dd></div>
+          <div><dt>Précondition</dt><dd>Utilisateur authentifié</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>L'utilisateur ouvre la page de téléversement et sélectionne un fichier.</li>
+            <li>L'écran affiche le nom et la taille du fichier choisi.</li>
+            <li>Il renseigne, optionnellement, un mot de passe de protection.</li>
+            <li>Il choisit une durée de validité : 1 jour, 3 jours ou 7 jours.</li>
+            <li>Il valide le téléversement.</li>
+            <li>Le système contrôle l'extension du fichier.</li>
+            <li>Le système borne la durée demandée entre 1 et 7 jours.</li>
+            <li>Le système écrit le fichier sur le disque sous un nom technique distinct du nom d'origine.</li>
+            <li>Le système hache le mot de passe s'il est fourni, calcule la date d'expiration et enregistre la ligne.</li>
+            <li>Le système répond <code>201 Created</code> avec l'identifiant et la date d'expiration.</li>
+            <li>Le front compose le lien de partage et l'affiche avec un bouton « Copier le lien ».</li>
+          </ol>
+        </div>
+
+        <div class="diagram-card">
+          <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor U as Utilisateur
+    participant F as Front React
+    participant A as API Spring
+    participant S as Disque
+    participant B as PostgreSQL
+
+    U->>F: Choisit un fichier, une durée, un mot de passe
+    F->>A: POST /api/files (multipart + Bearer)
+    A->>A: Contrôle extension et bornes de durée
+    A->>S: Écrit le fichier sous un nom technique
+    A->>B: Enregistre métadonnées et empreinte
+    A-->>F: 201 Created
+    F-->>U: Affiche le lien de partage
+          </pre>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Scénarios alternatifs</span>
+          <ul class="plain">
+            <li><strong>A1 — Changer de fichier :</strong> avant validation, l'utilisateur peut revenir à la sélection.</li>
+            <li><strong>A2 — Copie impossible :</strong> si le presse-papiers est indisponible, un message invite à copier le lien affiché à la main.</li>
+          </ul>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Extension interdite (<code>exe</code>, <code>bat</code>, <code>sh</code>, <code>cmd</code>, <code>msi</code>)</td><td><span class="pill pill-warn">400</span></td><td>Type de fichier interdit : .xxx</td></tr>
+                <tr><td>Fichier supérieur à 1 Go</td><td><span class="pill pill-warn">413</span></td><td>Le fichier est trop volumineux (1 Go maximum).</td></tr>
+                <tr><td>Jeton absent ou expiré</td><td><span class="pill pill-err">403</span></td><td>Vous n'avez pas accès à cette ressource.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG09</span><span>La durée de validité est comprise entre 1 et 7 jours ; une valeur hors bornes est ramenée silencieusement dans l'intervalle.</span></li>
+            <li><span class="rg-ref">RG10</span><span>En l'absence de durée précisée, la valeur par défaut est 7 jours.</span></li>
+            <li><span class="rg-ref">RG11</span><span>Le mot de passe de fichier est facultatif ; s'il est fourni, il est haché et n'est jamais renvoyé par l'API.</span></li>
+            <li><span class="rg-ref">RG12</span><span>Les extensions interdites sont configurables sans recompilation.</span></li>
+            <li><span class="rg-ref">RG13</span><span>La taille maximale acceptée est de 1 Go.</span></li>
+            <li><span class="rg-ref">RG14</span><span>Le nom de stockage diffère du nom d'origine : cela évite les collisions et neutralise les noms de fichiers hostiles.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> le fichier est présent sur le disque, une ligne existe dans <code>files</code>, et un lien de partage est disponible.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ UC04 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC04 — US03 / US04</span>
+        <h2>Télécharger un fichier via un lien</h2>
+        <p class="uc-goal">Permettre à un destinataire sans compte de consulter les caractéristiques d'un fichier, puis de le télécharger.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Destinataire</dd></div>
+          <div><dt>Écran</dt><dd><code>/d/{id}</code></dd></div>
+          <div><dt>Endpoints</dt><dd><code>GET /api/files/{id}/info</code><br /><code>POST /api/files/{id}/download</code></dd></div>
+          <div><dt>Précondition</dt><dd>Lien valide et non expiré</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>Le destinataire ouvre le lien reçu.</li>
+            <li>Le front interroge les métadonnées du fichier, sans authentification.</li>
+            <li>Le système vérifie que le fichier existe et n'a pas expiré.</li>
+            <li>La page affiche le nom, la taille, et indique si le fichier est protégé — avant tout téléchargement.</li>
+            <li>Si le fichier est protégé, le destinataire saisit le mot de passe.</li>
+            <li>Il lance le téléchargement.</li>
+            <li>Le système contrôle à nouveau l'expiration, puis le mot de passe le cas échéant.</li>
+            <li>Le système renvoie le flux binaire en imposant un téléchargement plutôt qu'un affichage.</li>
+            <li>Le fichier est enregistré sous son nom d'origine.</li>
+          </ol>
+        </div>
+
+        <div class="diagram-card">
+          <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor D as Destinataire
+    participant F as Front React
+    participant A as API Spring
+    participant B as PostgreSQL
+    participant S as Disque
+
+    D->>F: Ouvre /d/{id}
+    F->>A: GET /api/files/{id}/info
+    A->>B: Recherche le fichier
+    A->>A: Vérifie la date d'expiration
+    A-->>F: Nom, taille, protégé ou non
+    F-->>D: Affiche les métadonnées
+    D->>F: Saisit le mot de passe puis valide
+    F->>A: POST /api/files/{id}/download
+    A->>A: Revérifie expiration et mot de passe
+    A->>S: Lit le fichier
+    A-->>F: Flux binaire en pièce jointe
+    F-->>D: Enregistre sous le nom d'origine
+          </pre>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Identifiant inconnu</td><td><span class="pill pill-warn">404</span></td><td>Fichier introuvable</td></tr>
+                <tr><td>Lien expiré (consultation)</td><td><span class="pill pill-err">410</span></td><td>Ce lien a expiré</td></tr>
+                <tr><td>Lien expiré (téléchargement)</td><td><span class="pill pill-err">410</span></td><td>Ce lien a expiré</td></tr>
+                <tr><td>Mot de passe absent ou incorrect</td><td><span class="pill pill-err">401</span></td><td>Mot de passe requis ou incorrect</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG15</span><span>Les routes de consultation et de téléchargement sont publiques : la possession du lien fait foi.</span></li>
+            <li><span class="rg-ref">RG16</span><span>Les métadonnées sont consultables avant téléchargement, y compris l'information « protégé par mot de passe ».</span></li>
+            <li><span class="rg-ref">RG17</span><span>L'expiration est revérifiée à chaque appel, y compris au téléchargement : un lien ne peut pas être exploité après sa date limite.</span></li>
+            <li><span class="rg-ref">RG18</span><span>Le mot de passe transite dans le corps de la requête, jamais dans l'URL — il ne se retrouve donc ni dans les journaux serveur ni dans l'historique du navigateur.</span></li>
+            <li><span class="rg-ref">RG19</span><span>Le statut « actif / expiré » n'est pas une colonne : il se déduit de la comparaison entre la date d'expiration et l'instant courant.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> le fichier est enregistré sur le poste du destinataire. Aucun journal de téléchargement n'est conservé dans ce MVP.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ UC05 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC05 — US05</span>
+        <h2>Consulter l'historique de ses fichiers</h2>
+        <p class="uc-goal">Retrouver les fichiers déposés, leur statut et leur date d'expiration, et récupérer à nouveau un lien de partage.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Utilisateur inscrit</dd></div>
+          <div><dt>Écran</dt><dd><code>/mes-fichiers</code></dd></div>
+          <div><dt>Endpoint</dt><dd><code>GET /api/files</code></dd></div>
+          <div><dt>Précondition</dt><dd>Utilisateur authentifié</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>L'utilisateur ouvre « Mes fichiers ».</li>
+            <li>Le front appelle l'API avec le jeton.</li>
+            <li>Le système extrait l'identifiant utilisateur du jeton et ne retourne que les fichiers dont il est propriétaire.</li>
+            <li>La liste affiche nom, taille, date d'envoi, date d'expiration, pastille de statut et cadenas si le fichier est protégé.</li>
+            <li>L'utilisateur bascule entre les onglets « Actifs » et « Expirés ».</li>
+            <li>Pour un fichier actif, il copie le lien de partage en un clic.</li>
+          </ol>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Scénarios alternatifs</span>
+          <ul class="plain">
+            <li><strong>A1 — Aucun fichier :</strong> un message explicite remplace la liste.</li>
+            <li><strong>A2 — Copie du lien :</strong> un retour « Lien copié ✓ » confirme l'action pendant deux secondes ; en cas d'échec, un message d'erreur s'affiche.</li>
+          </ul>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Jeton absent ou expiré</td><td><span class="pill pill-err">403</span></td><td>Vous n'avez pas accès à cette ressource.</td></tr>
+                <tr><td>API injoignable</td><td><span class="pill pill-none">—</span></td><td>Impossible de charger tes fichiers.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG20</span><span>Cloisonnement strict : la requête filtre sur le propriétaire issu du jeton. Un utilisateur ne peut pas voir les fichiers d'un autre, même en connaissant leur identifiant.</span></li>
+            <li><span class="rg-ref">RG21</span><span>Les fichiers expirés restent visibles dans l'onglet dédié : l'utilisateur garde la trace de ses envois.</span></li>
+            <li><span class="rg-ref">RG22</span><span>Le bouton de copie est masqué pour les fichiers expirés, dont le lien ne fonctionne plus.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> aucune donnée modifiée : ce cas d'usage est en lecture seule.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ UC06 ============ -->
+  <section>
+    <article class="uc">
+      <div class="uc-head">
+        <span class="uc-ref">UC06 — US06</span>
+        <h2>Supprimer un fichier</h2>
+        <p class="uc-goal">Retirer définitivement un fichier avant son expiration naturelle, et invalider le lien déjà partagé.</p>
+      </div>
+      <div class="uc-body">
+        <dl class="uc-meta">
+          <div><dt>Acteur principal</dt><dd>Utilisateur inscrit</dd></div>
+          <div><dt>Écran</dt><dd><code>/mes-fichiers</code></dd></div>
+          <div><dt>Endpoint</dt><dd><code>DELETE /api/files/{id}</code></dd></div>
+          <div><dt>Précondition</dt><dd>Être propriétaire du fichier</dd></div>
+        </dl>
+
+        <div class="block">
+          <span class="block-title">Scénario nominal</span>
+          <ol class="flow">
+            <li>L'utilisateur clique sur « Supprimer » en face du fichier concerné.</li>
+            <li>Une confirmation rappelant le nom du fichier est demandée.</li>
+            <li>L'utilisateur confirme.</li>
+            <li>Le système vérifie que le demandeur est bien le propriétaire.</li>
+            <li>Le système efface le fichier du disque, puis la ligne en base.</li>
+            <li>Le système répond <code>204 No Content</code>.</li>
+            <li>La ligne disparaît de la liste sans rechargement de la page.</li>
+          </ol>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Scénario alternatif</span>
+          <ul class="plain">
+            <li><strong>A1 — Annulation :</strong> si l'utilisateur refuse la confirmation, aucune requête n'est émise.</li>
+          </ul>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Exceptions</span>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cas</th><th>Code</th><th>Message affiché</th></tr></thead>
+              <tbody>
+                <tr><td>Fichier appartenant à un autre utilisateur</td><td><span class="pill pill-err">403</span></td><td>Ce fichier ne vous appartient pas</td></tr>
+                <tr><td>Fichier déjà supprimé</td><td><span class="pill pill-warn">404</span></td><td>Fichier introuvable</td></tr>
+                <tr><td>Jeton absent ou expiré</td><td><span class="pill pill-err">403</span></td><td>Vous n'avez pas accès à cette ressource.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="block">
+          <span class="block-title">Règles de gestion</span>
+          <ul class="rg">
+            <li><span class="rg-ref">RG23</span><span>La confirmation est obligatoire : l'opération est irréversible.</span></li>
+            <li><span class="rg-ref">RG24</span><span>Seul le propriétaire peut supprimer un fichier ; la vérification est faite côté serveur, jamais uniquement dans l'interface.</span></li>
+            <li><span class="rg-ref">RG25</span><span>La suppression est physique : disque puis base, dans cet ordre.</span></li>
+            <li><span class="rg-ref">RG26</span><span>Un fichier expiré reste supprimable, ce qui permet de faire le ménage dans l'historique.</span></li>
+          </ul>
+        </div>
+
+        <p class="post"><strong>Postcondition —</strong> le fichier n'existe plus ni sur le disque ni en base. Tout lien partagé renvoie désormais « Fichier introuvable ».</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ MATRICE ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Matrice des droits d'accès</h2>
+      <p>Quatre routes sur huit sont publiques. C'est un choix assumé : le partage repose sur la possession du lien, pas sur un compte destinataire.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Route</th><th>Méthode</th><th>Accès</th><th>Cas d'usage</th></tr></thead>
+        <tbody>
+          <tr><td><code>/api/health</code></td><td>GET</td><td><span class="tag">Publique</span></td><td>Supervision</td></tr>
+          <tr><td><code>/api/auth/register</code></td><td>POST</td><td><span class="tag">Publique</span></td><td>UC01</td></tr>
+          <tr><td><code>/api/auth/login</code></td><td>POST</td><td><span class="tag">Publique</span></td><td>UC02</td></tr>
+          <tr><td><code>/api/files</code></td><td>POST</td><td><span class="tag tag-auth">Authentifiée</span></td><td>UC03</td></tr>
+          <tr><td><code>/api/files</code></td><td>GET</td><td><span class="tag tag-auth">Authentifiée</span></td><td>UC05</td></tr>
+          <tr><td><code>/api/files/{id}</code></td><td>DELETE</td><td><span class="tag tag-auth">Authentifiée</span></td><td>UC06</td></tr>
+          <tr><td><code>/api/files/{id}/info</code></td><td>GET</td><td><span class="tag">Publique</span></td><td>UC04</td></tr>
+          <tr><td><code>/api/files/{id}/download</code></td><td>POST</td><td><span class="tag">Publique</span></td><td>UC04</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ CODES ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Codes de retour normalisés</h2>
+      <p>Toutes les erreurs partagent un format homogène <code>{ timestamp, status, message }</code>, le champ <code>message</code> étant directement affichable à l'utilisateur.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Signification dans DataShare</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill pill-ok">200</span></td><td>Succès avec contenu</td></tr>
+          <tr><td><span class="pill pill-ok">201</span></td><td>Création effectuée : compte ou dépôt de fichier</td></tr>
+          <tr><td><span class="pill pill-ok">204</span></td><td>Suppression effectuée, sans contenu en retour</td></tr>
+          <tr><td><span class="pill pill-warn">400</span></td><td>Données invalides : validation, extension interdite</td></tr>
+          <tr><td><span class="pill pill-err">401</span></td><td>Identifiants ou mot de passe de fichier incorrects</td></tr>
+          <tr><td><span class="pill pill-err">403</span></td><td>Authentification absente ou expirée, ou ressource d'un autre utilisateur</td></tr>
+          <tr><td><span class="pill pill-warn">404</span></td><td>Ressource inexistante</td></tr>
+          <tr><td><span class="pill pill-warn">409</span></td><td>Conflit : email déjà utilisé</td></tr>
+          <tr><td><span class="pill pill-err">410</span></td><td>Lien expiré</td></tr>
+          <tr><td><span class="pill pill-warn">413</span></td><td>Fichier trop volumineux</td></tr>
+          <tr><td><span class="pill pill-err">500</span></td><td>Erreur inattendue côté serveur</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ ÉCARTS ============ -->
+  <section>
+    <div class="section-head">
+      <h2>Écarts constatés</h2>
+      <p>Points relevés lors de la rédaction, à arbitrer avant la démonstration. Les documenter vaut mieux que les découvrir en soutenance.</p>
+    </div>
+
+    <div class="gaps">
+      <article class="gap">
+        <h3>Mot de passe de fichier non validé</h3>
+        <p>L'interface annonce « 6 caractères minimum si renseigné », mais aucun contrôle n'existe côté serveur ni côté client. Soit implémenter la règle, soit retirer la mention.</p>
+      </article>
+      <article class="gap">
+        <h3>Durée d'expiration corrigée silencieusement</h3>
+        <p>Une valeur hors bornes est ramenée dans l'intervalle au lieu d'être rejetée. Sans effet depuis l'interface, qui ne propose que 1, 3 et 7 jours — mais un appel direct à l'API ne reçoit aucun signalement.</p>
+      </article>
+      <article class="gap">
+        <h3>Lien de partage calculé à deux endroits</h3>
+        <p>L'API renvoie un chemin que le front n'utilise pas, préférant le reconstruire à partir de l'adresse courante. Une seule des deux sources devrait faire foi.</p>
+      </article>
+      <article class="gap">
+        <h3>Aucune limitation des tentatives de connexion</h3>
+        <p>La route de connexion accepte un nombre illimité d'essais, ce qui expose à une attaque par force brute.</p>
+      </article>
+      <article class="gap">
+        <h3>Pas de purge des fichiers expirés</h3>
+        <p>Les fichiers restent sur le disque après leur date d'expiration. Le lien ne fonctionne plus, mais l'espace n'est pas libéré. La tâche planifiée étant hors périmètre MVP, c'est une dette assumée.</p>
+      </article>
+      <article class="gap">
+        <h3>Jeton conservé dans le stockage local</h3>
+        <p>Pratique pour maintenir la session, mais lisible par un script en cas de faille XSS. Choix assumé pour le prototype, à réévaluer avant une mise en production.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    Généré à partir de <code>g.docs/USE-CASES.md</code> — voir aussi <code>g.docs/openapi.yaml</code>
+    pour le contrat d'interface, <code>g.docs/ARCHITECTURE.md</code> et <code>g.docs/DATA-MODEL.md</code>
+    pour la conception technique.
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  // Rendu local du fichier : dans un artefact publié, les diagrammes sont pris
+  // en charge nativement et ce script est simplement ignoré.
+  if (window.mermaid) {
+    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    window.mermaid.initialize({ startOnLoad: true, theme: prefersDark ? "dark" : "default" });
+  }
+</script>
