@@ -26,10 +26,7 @@ paths:
             schema: { $ref: '#/components/schemas/RegisterRequest' }
       responses:
         '201':
-          description: Compte créé
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/UserSummary' }
+          description: Compte créé — aucun corps de réponse, le client enchaîne sur /auth/login
         '400':
           description: Email invalide ou mot de passe trop court (< 8 caractères)
           content:
@@ -250,18 +247,13 @@ components:
         email: { type: string, format: email }
         password: { type: string }
 
-    UserSummary:
-      type: object
-      properties:
-        id: { type: string, format: uuid }
-        email: { type: string, format: email }
-
     AuthResponse:
       type: object
       properties:
         token: { type: string, description: JWT signé, à envoyer en `Authorization: Bearer <token>` }
         expiresIn: { type: integer, description: durée de validité en secondes }
-        user: { $ref: '#/components/schemas/UserSummary' }
+        userId: { type: string, format: uuid }
+        email: { type: string, format: email }
 
     UploadResponse:
       type: object
@@ -296,10 +288,12 @@ components:
         password: { type: string, nullable: true }
 
     ApiError:
+      description: >
+        Format d'erreur homogène produit par le gestionnaire global
+        (GlobalExceptionHandler). Le champ `message` est rédigé en français et
+        directement affichable à l'utilisateur final.
       type: object
       properties:
         timestamp: { type: string, format: date-time }
-        status: { type: integer }
-        error: { type: string }
-        message: { type: string }
-        path: { type: string }
+        status: { type: integer, description: code HTTP, répété pour faciliter le traitement côté client }
+        message: { type: string, example: Email déjà utilisé }

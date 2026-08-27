@@ -42,6 +42,10 @@ export function UploadPage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!file) return;
+    if (password && password.length < 6) {
+      setError('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
 
     setIsSubmitting(true);
     setError(null);

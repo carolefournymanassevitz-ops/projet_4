@@ -171,6 +171,8 @@ de page. Une déconnexion purge le stockage local.
 | Cas | Code | Message affiché |
 |---|---|---|
 | Extension interdite (`exe`, `bat`, `sh`, `cmd`, `msi`) | `400` | Type de fichier interdit : .xxx |
+| Mot de passe de fichier < 6 caractères | `400` | Le mot de passe doit contenir au moins 6 caractères |
+| Durée d'expiration hors de l'intervalle 1–7 jours | `400` | L'expiration doit être comprise entre 1 et 7 jours |
 | Fichier supérieur à 1 Go | `413` | Le fichier est trop volumineux (1 Go maximum). |
 | Jeton absent ou expiré | `403` | Vous n'avez pas accès à cette ressource. |
 
@@ -179,11 +181,11 @@ et un lien de partage est disponible.
 
 ### Règles de gestion
 
-- **RG09** — La durée de validité est comprise entre 1 et 7 jours ; une valeur hors bornes
-  est **ramenée silencieusement** dans l'intervalle (voir *Écarts constatés*).
+- **RG09** — La durée de validité doit être comprise entre 1 et 7 jours ; toute valeur hors
+  bornes est **rejetée par un 400**.
 - **RG10** — En l'absence de durée précisée, la valeur par défaut est 7 jours.
-- **RG11** — Le mot de passe de fichier est facultatif ; s'il est fourni, il est haché en
-  BCrypt et n'est jamais renvoyé par l'API.
+- **RG11** — Le mot de passe de fichier est facultatif ; s'il est fourni, il doit compter au
+  moins **6 caractères**, est haché en BCrypt et n'est jamais renvoyé par l'API.
 - **RG12** — Les extensions interdites sont configurables sans recompilation.
 - **RG13** — La taille maximale acceptée est de 1 Go.
 - **RG14** — Le nom de stockage sur disque diffère du nom d'origine : cela évite les
@@ -374,20 +376,21 @@ l'utilisateur.
 
 Points relevés lors de la rédaction de ce document, à arbitrer avant la démonstration.
 
-1. **Mot de passe de fichier non validé** — l'interface annonce « 6 caractères minimum si
-   renseigné », mais aucun contrôle n'existe côté serveur ni côté client. Soit implémenter
-   la règle, soit retirer la mention.
-2. **Durée d'expiration corrigée silencieusement** — une valeur hors bornes est ramenée
-   dans l'intervalle au lieu d'être rejetée par un `400`. Acceptable puisque l'interface ne
-   propose que 1, 3 et 7 jours, mais un appel direct à l'API ne reçoit aucun signalement.
-3. **Lien de partage calculé à deux endroits** — l'API renvoie un chemin que le front
+1. **Lien de partage calculé à deux endroits** — l'API renvoie un chemin que le front
    n'utilise pas, préférant le reconstruire à partir de l'adresse courante. Source de
    divergence potentielle : une seule des deux sources devrait faire foi.
-4. **Aucune limitation des tentatives de connexion** — la route de connexion accepte un
+2. **Aucune limitation des tentatives de connexion** — la route de connexion accepte un
    nombre illimité d'essais, ce qui expose à une attaque par force brute.
-5. **Pas de purge des fichiers expirés** — les fichiers restent sur le disque après leur
+3. **Pas de purge des fichiers expirés** — les fichiers restent sur le disque après leur
    date d'expiration. Le lien ne fonctionne plus, mais l'espace n'est pas libéré. La tâche
-   planifiée est hors périmètre MVP : à documenter comme dette assumée.
-6. **Jeton conservé en stockage local** — pratique pour maintenir la session, mais lisible
+   planifiée est hors périmètre MVP : dette assumée.
+4. **Jeton conservé en stockage local** — pratique pour maintenir la session, mais lisible
    par un script en cas de faille XSS. Choix assumé pour le prototype, à réévaluer avant
    une mise en production.
+
+### Écarts corrigés depuis la première rédaction
+
+- **Mot de passe de fichier non validé** — corrigé le 21/08 : contrôle des 6 caractères
+  minimum côté serveur (`FileService`) **et** côté interface, verrouillé par un test.
+- **Durée d'expiration corrigée silencieusement** — corrigé le 21/08 : une valeur hors
+  bornes est désormais rejetée par un `400` explicite, verrouillé par un test.

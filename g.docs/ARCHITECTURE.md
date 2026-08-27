@@ -15,7 +15,7 @@ flowchart LR
     subgraph Server["Serveur applicatif"]
         API["API REST\nSpring Boot\n(Controller / Service / Repository)"]
         AUTH["Filtre JWT\n(Spring Security)"]
-        SCHED["Tâche planifiée\n(purge des fichiers expirés)"]
+        SCHED["Tâche planifiée\n(purge des fichiers expirés)\n— évolution prévue, hors MVP —"]
     end
 
     subgraph Data["Persistance"]
@@ -27,8 +27,8 @@ flowchart LR
     API --> AUTH
     API -- "JPA / Flyway" --> DB
     API -- "lecture/écriture" --> FS
-    SCHED -- "purge quotidienne" --> DB
-    SCHED -- "suppression fichiers" --> FS
+    SCHED -. "purge quotidienne (à venir)" .-> DB
+    SCHED -. "suppression fichiers (à venir)" .-> FS
 ```
 
 ## Briques techniques
@@ -40,7 +40,7 @@ flowchart LR
 | Authentification | Génération/validation des JWT, hash des mots de passe | Spring Security + BCrypt + JJWT |
 | Base de données | Comptes utilisateurs + métadonnées des fichiers | PostgreSQL (via Spring Data JPA, migrations Flyway) |
 | Stockage fichiers | Contenu binaire des fichiers déposés | Système de fichiers local (répertoire dédié, hors webroot) |
-| Tâche planifiée | Purge des fichiers expirés (métadonnées + binaire) | `@Scheduled` Spring |
+| Tâche planifiée | Purge des fichiers expirés (métadonnées + binaire) | `@Scheduled` Spring — **non implémentée dans le MVP** |
 
 ## Flux principaux
 
@@ -50,8 +50,9 @@ flowchart LR
 - **Téléchargement** : destinataire ouvre le lien (public, pas de JWT) → SPA appelle `GET /files/{id}/info`
   pour afficher les métadonnées → si mot de passe requis, saisie → `POST /files/{id}/download` renvoie
   le flux binaire.
-- **Expiration** : vérifiée à la lecture (`info`/`download` renvoient 410 si expiré) et purgée en tâche
-  de fond quotidienne pour libérer le disque et la base.
+- **Expiration** : vérifiée à la lecture — `info` et `download` renvoient 410 si le délai est dépassé.
+  La purge de fond, qui libérerait disque et base, est une évolution prévue **non implémentée dans le
+  MVP** : les fichiers expirés restent stockés, mais ne sont plus accessibles.
 
 ## Déploiement (local / démo)
 

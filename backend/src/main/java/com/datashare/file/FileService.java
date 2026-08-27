@@ -41,7 +41,14 @@ public class FileService {
     public UploadResponse upload(MultipartFile file, Integer expirationDays, String password, UUID ownerId) throws IOException {
         validateExtension(file.getOriginalFilename());
 
-        int days = (expirationDays == null) ? 7 : Math.min(Math.max(expirationDays, 1), 7);
+        if (password != null && !password.isBlank() && password.length() < 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le mot de passe doit contenir au moins 6 caractères");
+        }
+
+        if (expirationDays != null && (expirationDays < 1 || expirationDays > 7)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'expiration doit être comprise entre 1 et 7 jours");
+        }
+        int days = (expirationDays == null) ? 7 : expirationDays;
         User owner = userRepository.getReferenceById(ownerId);
         UUID id = UUID.randomUUID();
         String storedFilename = storageService.store(file, id);

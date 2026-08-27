@@ -350,9 +350,16 @@
     <p class="eyebrow">Autoévaluation — Pilotez le développement d'une solution informatique</p>
     <h1>État des livrables</h1>
     <p class="lede">
-      Vérification des 57 indicateurs de la fiche d'autoévaluation, confrontés au contenu
-      réel du dépôt au 21/08/2026. Chaque statut s'appuie sur une preuve vérifiable dans le
-      code ou la documentation — pas sur une intention.
+      Vérification des 69 cases de la fiche d'autoévaluation, confrontées au contenu réel du
+      dépôt. Chaque statut s'appuie sur une preuve vérifiable dans le code ou la
+      documentation — pas sur une intention.
+    </p>
+    <p class="note">
+      <strong>Deuxième passe, 21/08/2026 —</strong> le premier audit relevait 22 acquis, 11
+      partiels et 23 manquants. Depuis : suite de tests créée, README réécrit, six documents
+      produits, contrat d'interface réaligné sur le code. Ce relevé compte désormais
+      <em>toutes</em> les cases, sous-items compris (69 au lieu de 57), d'où un dénominateur
+      différent du premier passage.
     </p>
   </header>
 
@@ -360,15 +367,15 @@
   <section>
     <div class="score">
       <div class="stat stat-ok">
-        <span class="stat-value">22</span>
+        <span class="stat-value">63</span>
         <span class="stat-label">Acquis</span>
       </div>
       <div class="stat stat-warn">
-        <span class="stat-value">11</span>
+        <span class="stat-value">5</span>
         <span class="stat-label">Partiels</span>
       </div>
       <div class="stat stat-err">
-        <span class="stat-value">23</span>
+        <span class="stat-value">0</span>
         <span class="stat-label">Manquants</span>
       </div>
       <div class="stat stat-neutral">
@@ -377,26 +384,24 @@
       </div>
     </div>
 
-    <div class="meter" role="img" aria-label="22 indicateurs acquis, 11 partiels, 23 manquants, 1 à vérifier sur 57">
-      <span class="meter-ok" style="width: 38.6%"></span>
-      <span class="meter-warn" style="width: 19.3%"></span>
-      <span class="meter-err" style="width: 40.4%"></span>
-      <span class="meter-neutral" style="width: 1.7%"></span>
+    <div class="meter" role="img" aria-label="63 cases acquises, 5 partielles, 0 manquante, 1 à vérifier sur 69">
+      <span class="meter-ok" style="width: 91.3%"></span>
+      <span class="meter-warn" style="width: 7.2%"></span>
+      <span class="meter-neutral" style="width: 1.5%"></span>
     </div>
 
     <div class="meter-legend">
       <span><i class="dot dot-ok"></i> Acquis — preuve dans le dépôt</span>
-      <span><i class="dot dot-warn"></i> Partiel — fait mais incomplet ou non documenté</span>
-      <span><i class="dot dot-err"></i> Manquant — rien dans le dépôt</span>
+      <span><i class="dot dot-warn"></i> Partiel — fait mais incomplet</span>
       <span><i class="dot dot-neutral"></i> À vérifier par toi</span>
     </div>
 
     <p class="note">
-      <strong>Lecture d'ensemble —</strong> le <em>code</em> est en bonne santé : architecture
-      en couches, sécurité correcte, API fonctionnelle de bout en bout. Ce qui manque est
-      presque entièrement du côté <em>tests</em> et <em>documentation</em>. Autrement dit,
-      tu as construit la maison mais pas encore rédigé le carnet d'entretien ni fait passer
-      le contrôle technique.
+      <strong>Lecture d'ensemble —</strong> plus aucun indicateur vide. Les cinq points
+      partiels restants sont documentés et assumés, ce qui est une position défendable en
+      soutenance : un manque expliqué vaut mieux qu'un manque découvert par l'évaluateur.
+      Le seul point à trancher toi-même est la conformité aux maquettes, que je ne peux pas
+      vérifier sans elles.
     </p>
   </section>
 
@@ -405,7 +410,7 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 1</span>
       <h2>Définir l'architecture front-end</h2>
-      <p>Le schéma global existe et il est bon. C'est la partie front qui n'y est traitée qu'en une ligne, et la justification des choix qui manque entièrement.</p>
+      <p>Bloc complété par <code>DECISIONS.md</code>, qui documente le découpage du front et justifie chaque choix face aux alternatives écartées.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -418,8 +423,8 @@
           </tr>
           <tr>
             <td class="sub">l'architecture front</td>
-            <td class="status"><span class="pill pill-warn">Partiel</span></td>
-            <td class="evidence">Une seule ligne « SPA React » dans le tableau des briques. L'organisation interne n'est pas décrite.</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence"><code>DECISIONS.md</code> § « Découpage du code » : rôle de chaque dossier et règle de séparation présentation / métier</td>
           </tr>
           <tr>
             <td class="sub">les interactions front / back</td>
@@ -428,18 +433,18 @@
           </tr>
           <tr>
             <td>Organisation du code front modulaire</td>
-            <td class="status"><span class="pill pill-warn">Partiel</span></td>
-            <td class="evidence"><strong>Fait dans le code</strong> (<code>components/</code>, <code>services/</code>, <code>store/</code> Redux Toolkit, <code>utils/</code>) mais <strong>nulle part documenté</strong>.</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Composants réutilisables, services HTTP, store Redux Toolkit — désormais documentés</td>
           </tr>
           <tr>
             <td>Choix techniques du front documentés</td>
-            <td class="status"><span class="pill pill-err">Manquant</span></td>
-            <td class="evidence">Les technos sont listées, jamais expliquées. Une liste n'est pas une documentation de choix.</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">React 19, Vite, TypeScript, Redux Toolkit, <code>fetch</code> natif</td>
           </tr>
           <tr>
             <td class="sub">justification de chaque choix</td>
-            <td class="status"><span class="pill pill-err">Manquant</span></td>
-            <td class="evidence">Le README annonce « Justification détaillée à venir dans un document dédié »</td>
+            <td class="status"><span class="pill pill-ok">Acquis</span></td>
+            <td class="evidence">Chaque décision indique les alternatives écartées et le motif du départage</td>
           </tr>
         </tbody>
       </table>
@@ -502,7 +507,7 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 3</span>
       <h2>Analyser puis concevoir l'API</h2>
-      <p>Bloc quasiment complet. Le contrat OpenAPI est cohérent avec le code réel — y compris le préfixe <code>/api</code>, ce qui est souvent une source d'écart.</p>
+      <p>Bloc complet. La rédaction de ce rapport a révélé que le contrat décrivait encore l'API telle qu'imaginée en conception, pas telle qu'implémentée : il a été réaligné.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -513,7 +518,7 @@
           <tr><td class="sub">l'architecture back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Couches Controller / Service / Repository explicitées</td></tr>
           <tr><td class="sub">l'API et les interactions front / back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Flux upload, téléchargement, expiration</td></tr>
           <tr><td class="sub">la BDD</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DATA-MODEL.md</code> — MCD Merise + MLD PostgreSQL</td></tr>
-          <tr><td>L'API respecte les schémas et formats REST/JSON</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Les réponses nominales sont conformes, mais le format d'erreur normalisé <code>{ timestamp, status, message }</code> n'est pas décrit dans l'OpenAPI.</td></tr>
+          <tr><td>L'API respecte les schémas et formats REST/JSON</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Trois écarts contrat / code corrigés : réponse d'inscription (corps vide), <code>AuthResponse</code> aplati en <code>userId</code> + <code>email</code>, format d'erreur ramené à <code>{ timestamp, status, message }</code></td></tr>
           <tr><td>L'API permet la communication front / back</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Vérifié bout en bout</td></tr>
         </tbody>
       </table>
@@ -525,16 +530,19 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 4</span>
       <h2>Superviser et implémenter le back-end</h2>
-      <p>Le code est conforme aux attentes. Ce sont les trois indicateurs de documentation — dont l'usage de l'IA, explicitement demandé — qui sont vides.</p>
+      <p>Bloc complet. Les trois indicateurs de documentation qui manquaient sont couverts par <code>DECISIONS.md</code> et <code>AI-USAGE.md</code>.</p>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
         <tbody>
-          <tr><td>Choix techniques du back documentés</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun document ne justifie Spring Boot 4, JWT plutôt que session, stockage disque plutôt qu'objet</td></tr>
-          <tr><td class="sub">justification de chaque choix</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
-          <tr><td>Expliquer l'utilisation de l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune trace écrite, alors que c'est un indicateur explicite du référentiel</td></tr>
-          <tr><td>Back structuré en couches séparées</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Packages <code>auth</code>, <code>file</code>, <code>user</code>, <code>security</code>, <code>config</code>, <code>web</code> — logique métier, accès données et services bien séparés</td></tr>
+          <tr><td>Choix techniques du back documentés</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DECISIONS.md</code> : Spring Boot 4.1, PostgreSQL, Flyway, JWT, BCrypt, stockage disque</td></tr>
+          <tr><td class="sub">justification de chaque choix</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Alternatives écartées et contreparties assumées pour chaque décision</td></tr>
+          <tr><td>Expliquer l'utilisation de l'IA</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>AI-USAGE.md</code> : cadre posé, répartition des tâches, principe de supervision par la preuve</td></tr>
+          <tr><td>Back structuré en couches séparées</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Packages <code>auth</code>, <code>file</code>, <code>user</code>, <code>security</code>, <code>config</code>, <code>web</code></td></tr>
+          <tr><td class="sub">logique métier</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>AuthService</code>, <code>FileService</code> — règles et validations</td></tr>
+          <tr><td class="sub">accès aux données</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>UserRepository</code>, <code>FileRepository</code> (Spring Data JPA)</td></tr>
+          <tr><td class="sub">services</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>JwtService</code>, <code>FileStorageService</code> — techniques, isolés du métier</td></tr>
           <tr><td>Données sensibles sécurisées</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">BCrypt sur les mots de passe utilisateur <em>et</em> fichier, JWT signé HS256</td></tr>
           <tr><td>Opérations critiques sans bug bloquant</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Le blocage authentification est levé</td></tr>
           <tr><td>Bonnes pratiques de développement</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Injection par constructeur, DTO en records, Flyway, <code>open-in-view: false</code></td></tr>
@@ -549,20 +557,21 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 5</span>
       <h2>Mettre en œuvre les tests</h2>
-      <p>Le point noir du projet : <strong>huit indicateurs sur huit sont vides</strong>. Le seul test existant vérifie que le contexte Spring démarre.</p>
+      <p>Le bloc qui était entièrement vide est désormais entièrement couvert : <strong>22 tests, 0 échec, 93,6 % de couverture d'instructions</strong>.</p>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
         <tbody>
-          <tr><td>Procédures de tests décrites</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><code>TESTING.md</code> n'existe pas</td></tr>
-          <tr><td>Référence aux rapports de tests et de couverture</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
-          <tr><td class="sub">tests sur l'upload</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun</td></tr>
-          <tr><td class="sub">tests sur le téléchargement</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun</td></tr>
-          <tr><td class="sub">tests sur l'authentification</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun — le bug 403 aurait été capturé par un simple test d'inscription</td></tr>
-          <tr><td>Les tests ont permis de détecter des anomalies</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Les anomalies ont été trouvées à la main, pas par des tests</td></tr>
-          <tr><td>Rapports de tests et de couverture inclus</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Pas de JaCoCo dans <code>pom.xml</code> — la couverture n'est pas mesurable en l'état</td></tr>
-          <tr><td>Stabilité vérifiée, pas de régressions</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun filet de sécurité automatisé</td></tr>
+          <tr><td>Procédures de tests décrites</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>TESTING.md</code> : stratégie, isolation transactionnelle, cas couverts, limites</td></tr>
+          <tr><td>Référence aux rapports de tests et de couverture</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Chiffres relevés dans <code>TESTING.md</code>, rapport JaCoCo regénérable par <code>./mvnw test</code></td></tr>
+          <tr><td>Tests sur les fonctionnalités critiques</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">21 tests d'intégration traversant toute la pile</td></tr>
+          <tr><td class="sub">tests sur l'upload</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Dépôt valide, extension interdite, dépôt sans jeton</td></tr>
+          <tr><td class="sub">tests sur le téléchargement</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Avec mot de passe, sans mot de passe, fichier libre, lien expiré, identifiant inconnu</td></tr>
+          <tr><td class="sub">tests sur l'authentification</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">7 tests, dont la non-énumération des comptes (RG05)</td></tr>
+          <tr><td>Les tests ont permis de détecter des anomalies</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Bean <code>ObjectMapper</code> absent en Spring Boot 4 (12 erreurs), import de test déplacé — les deux tracés dans <code>TESTING.md</code></td></tr>
+          <tr><td>Rapports de tests et de couverture inclus</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">JaCoCo configuré dans <code>pom.xml</code> — 93,6 % instructions, 68,3 % branches</td></tr>
+          <tr><td>Stabilité vérifiée, pas de régressions</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Les 22 tests constituent le filet à relancer après toute modification</td></tr>
         </tbody>
       </table>
     </div>
@@ -573,22 +582,26 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 6</span>
       <h2>Performance, conformité et maintenance</h2>
-      <p>Les messages d'erreur et l'ergonomie ont progressé aujourd'hui. La performance n'a jamais été mesurée, et le rapport de revue du code écrit par l'IA reste à produire.</p>
+      <p>Bloc couvert par <code>MAINTENANCE.md</code>, <code>SECURITY.md</code>, <code>PERF.md</code> et la revue de code de <code>AI-USAGE.md</code>. Seule l'optimisation reste partielle : la performance est mesurée, pas encore améliorée.</p>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
         <tbody>
-          <tr><td>Procédures de maintenance décrites</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><code>MAINTENANCE.md</code> n'existe pas</td></tr>
-          <tr><td>Référence au rapport de revue du code IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">—</td></tr>
-          <tr><td>Application exploitable sans bug bloquant</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Vérifié ce matin</td></tr>
-          <tr><td>Code lisible, organisé, documenté</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Commentaires en français expliquant les intentions, nommage cohérent</td></tr>
-          <tr><td>Bonnes pratiques de sécurité (XSS, CSRF, injections)</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Injections couvertes par JPA. Mais CSRF désactivé sans justification écrite, JWT en <code>localStorage</code>, aucune limitation des tentatives de connexion.</td></tr>
-          <tr><td>Rapport de revue technique du code écrit par l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Livrable explicitement exigé</td></tr>
-          <tr><td class="sub">optimisation de la performance</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune mesure, aucun budget front</td></tr>
-          <tr><td class="sub">optimisation des messages d'erreur</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>GlobalExceptionHandler</code> + messages de validation en français</td></tr>
-          <tr><td class="sub">optimisation de l'ergonomie</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Retour visuel de copie du lien corrigé, mais aucune démarche d'ensemble documentée</td></tr>
-          <tr><td>Démontrer la bonne performance</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Rien à montrer sans mesure</td></tr>
+          <tr><td>Procédures de maintenance décrites</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>MAINTENANCE.md</code> : migrations, sauvegardes, mises à jour, tableau de diagnostic</td></tr>
+          <tr><td>Référence au rapport de revue du code IA</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Renvoi depuis le README vers <code>AI-USAGE.md</code></td></tr>
+          <tr><td>Application exploitable sans bug bloquant</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Parcours complet vérifié, tests au vert</td></tr>
+          <tr><td>Code suit les bonnes pratiques</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Injection par constructeur, DTO en records, Flyway, <code>open-in-view: false</code></td></tr>
+          <tr><td class="sub">lisible</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Nommage explicite, méthodes courtes</td></tr>
+          <tr><td class="sub">bien organisé</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Découpage par domaine métier, arborescence documentée</td></tr>
+          <tr><td class="sub">documenté</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Commentaires expliquant l'intention plutôt que paraphrasant le code</td></tr>
+          <tr><td>Bonnes pratiques de sécurité (XSS, CSRF, injections)</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>SECURITY.md</code> : modèle de menace, traitement de chaque famille, désactivation CSRF justifiée, 7 risques résiduels assumés</td></tr>
+          <tr><td>Rapport de revue technique du code écrit par l'IA</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>AI-USAGE.md</code> § 2 : 7 anomalies tracées, points de vigilance, évaluation par critère</td></tr>
+          <tr><td>Optimisation des parties critiques</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Messages d'erreur et ergonomie traités, performance caractérisée</td></tr>
+          <tr><td class="sub">performance</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Mesurée et documentée, mais aucune optimisation effective — les pistes sont listées, pas appliquées</td></tr>
+          <tr><td class="sub">messages d'erreur</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>GlobalExceptionHandler</code> + messages de validation en français</td></tr>
+          <tr><td class="sub">ergonomie</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Retour visuel de copie du lien, validation du mot de passe fichier côté client</td></tr>
+          <tr><td>Démontrer la bonne performance</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Mesures réelles : connexion ~130 ms (BCrypt), historique 6–12 ms, 5 Mo déposés en 77 ms, bundle 265 Ko</td></tr>
         </tbody>
       </table>
     </div>
@@ -599,24 +612,27 @@
     <div class="section-head">
       <span class="block-ref">COMPÉTENCE 7</span>
       <h2>Rédiger la documentation technique</h2>
-      <p>Les documents de conception sont bons, mais le README — la porte d'entrée du projet — est resté figé à la phase de conception.</p>
+      <p>README entièrement réécrit et six documents produits. Seuls les scripts de déploiement restent incomplets.</p>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Indicateur</th><th>Statut</th><th>Constat</th></tr></thead>
         <tbody>
-          <tr><td class="sub">diagramme simple de l'architecture</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>ARCHITECTURE.md</code></td></tr>
-          <tr><td class="sub">choix technologiques justifiés</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Listés, pas justifiés</td></tr>
+          <tr><td>La documentation technique est complète</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Six documents dans <code>g.docs/</code> + quatre à la racine</td></tr>
+          <tr><td class="sub">diagramme simple de l'architecture</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>ARCHITECTURE.md</code> — la tâche planifiée non implémentée y est désormais signalée comme évolution prévue</td></tr>
+          <tr><td class="sub">choix technologiques justifiés</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DECISIONS.md</code></td></tr>
           <tr><td class="sub">modèle de données</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>DATA-MODEL.md</code></td></tr>
-          <tr><td class="sub">documentation API</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>openapi.yaml</code></td></tr>
-          <tr><td class="sub">sécurité, qualité, installation, usage de l'IA</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucun de ces quatre volets n'est rédigé</td></tr>
-          <tr><td>Doc permettant à un dev tiers de reprendre le projet</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">La conception est claire, mais rien n'explique le code livré</td></tr>
-          <tr><td class="sub">README — installation</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Présent mais préfixé « processus cible, en cours d'implémentation »</td></tr>
-          <tr><td class="sub">README — lancement</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Commandes correctes, mais <code>mvn</code> au lieu de <code>./mvnw</code></td></tr>
-          <tr><td class="sub">README — utilisation</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Aucune section n'explique comment se servir de l'application</td></tr>
-          <tr><td>Le README permet une reprise facile</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence"><strong>Tous les liens documentaires sont cassés</strong> : ils pointent vers <code>docs/</code> alors que le dossier s'appelle <code>g.docs/</code>. Le statut affiché est « implémentation à venir » alors que tout est codé.</td></tr>
-          <tr><td class="sub">scripts de déploiement</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence"><code>docker-compose.yml</code> + <code>.env.example</code> pour PostgreSQL seulement — rien pour déployer l'application</td></tr>
-          <tr><td class="sub">TESTING.md, SECURITY.md, PERF.md, MAINTENANCE.md</td><td class="status"><span class="pill pill-err">Manquant</span></td><td class="evidence">Les quatre fichiers sont absents</td></tr>
+          <tr><td class="sub">documentation API</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>openapi.yaml</code>, réaligné sur le code</td></tr>
+          <tr><td class="sub">sécurité, qualité, installation, usage de l'IA</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence"><code>SECURITY.md</code>, <code>TESTING.md</code> + <code>MAINTENANCE.md</code>, README, <code>AI-USAGE.md</code></td></tr>
+          <tr><td>Doc permettant à un dev tiers de reprendre le projet</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Arborescence commentée, procédures de diagnostic, dette technique priorisée</td></tr>
+          <tr><td>README clair</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Réécrit intégralement</td></tr>
+          <tr><td class="sub">README — installation</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Prérequis, trois terminaux dans l'ordre, vérification par <code>/api/health</code></td></tr>
+          <tr><td class="sub">README — lancement</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Commandes <code>./mvnw</code> correctes, avertissement sur le redémarrage obligatoire</td></tr>
+          <tr><td class="sub">README — utilisation</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Parcours en six étapes, de l'inscription à la suppression</td></tr>
+          <tr><td>Le README permet une reprise facile</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Liens vers <code>g.docs/</code> corrigés, statut réel affiché, limites connues assumées</td></tr>
+          <tr><td>Autre documentation exigée incluse</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence">Le plan qualité est complet ; le volet déploiement ne l'est pas</td></tr>
+          <tr><td class="sub">scripts de déploiement</td><td class="status"><span class="pill pill-warn">Partiel</span></td><td class="evidence"><code>docker-compose.yml</code> + <code>.env.example</code> couvrent PostgreSQL seulement — rien pour déployer l'application elle-même</td></tr>
+          <tr><td class="sub">TESTING.md, SECURITY.md, PERF.md, MAINTENANCE.md</td><td class="status"><span class="pill pill-ok">Acquis</span></td><td class="evidence">Les quatre fichiers sont à la racine du dépôt et liés depuis le README</td></tr>
         </tbody>
       </table>
     </div>
@@ -625,22 +641,29 @@
   <!-- ============ INCOHÉRENCES ============ -->
   <section>
     <div class="section-head">
-      <h2>Deux incohérences à corriger en priorité</h2>
-      <p>Ces points ne sont pas des manques, mais des contradictions internes qu'un évaluateur attentif repérera.</p>
+      <h2>Incohérences corrigées</h2>
+      <p>Trois contradictions entre la documentation et le code, repérées lors du premier audit et traitées depuis.</p>
     </div>
     <div class="actions">
       <article class="action">
-        <span class="action-rank">!</span>
+        <span class="action-rank">✓</span>
         <div class="action-body">
-          <h3>La documentation décrit une brique qui n'existe pas</h3>
-          <p><code>ARCHITECTURE.md</code> présente une « tâche planifiée <code>@Scheduled</code> » de purge des fichiers expirés, et le diagramme la représente. Or aucune annotation <code>@Scheduled</code> n'existe dans le code — la purge est hors périmètre MVP. Soit tu l'implémentes, soit tu la retires du schéma en la signalant comme évolution prévue.</p>
+          <h3>La documentation décrivait une brique inexistante</h3>
+          <p><code>ARCHITECTURE.md</code> présentait une tâche planifiée <code>@Scheduled</code> de purge, absente du code. Elle est désormais explicitement signalée comme évolution hors MVP, dans le tableau des briques comme dans le diagramme.</p>
         </div>
       </article>
       <article class="action">
-        <span class="action-rank">!</span>
+        <span class="action-rank">✓</span>
         <div class="action-body">
-          <h3>Le README décrit un projet qui n'existe plus</h3>
-          <p>Il annonce « Phase de conception terminée — implémentation à venir », présente <code>backend/</code> et <code>frontend/</code> comme « à venir », et tous ses liens pointent vers <code>docs/</code> au lieu de <code>g.docs/</code>. C'est le premier fichier que lira ton évaluateur.</p>
+          <h3>Le README décrivait un projet qui n'existait plus</h3>
+          <p>Il annonçait « implémentation à venir » et tous ses liens pointaient vers un dossier <code>docs/</code> renommé depuis. Entièrement réécrit.</p>
+        </div>
+      </article>
+      <article class="action">
+        <span class="action-rank">✓</span>
+        <div class="action-body">
+          <h3>Le contrat d'interface décrivait une API différente du code</h3>
+          <p>Découvert en rédigeant ce rapport : <code>openapi.yaml</code> annonçait un objet utilisateur en réponse à l'inscription (le code renvoie un corps vide), un <code>AuthResponse</code> imbriquant un <code>user</code> (le code l'aplatit en <code>userId</code> et <code>email</code>), et un format d'erreur avec des champs <code>error</code> et <code>path</code> qui n'existent plus. Les trois sont réalignés.</p>
         </div>
       </article>
     </div>
@@ -649,60 +672,61 @@
   <!-- ============ PLAN D'ACTION ============ -->
   <section>
     <div class="section-head">
-      <h2>Plan d'action, par ordre de rentabilité</h2>
-      <p>Classé par rapport entre points d'évaluation gagnés et temps investi.</p>
+      <h2>Ce qu'il reste à faire</h2>
+      <p>Cinq points partiels et un point à trancher. Aucun n'est bloquant pour le dépôt : tous sont documentés comme limites assumées.</p>
     </div>
 
     <div class="actions">
       <article class="action">
         <span class="action-rank">1</span>
         <div class="action-body">
-          <h3>Réécrire le README</h3>
-          <p>Une heure de travail qui débloque quatre indicateurs et corrige la première impression. Statut réel, liens vers <code>g.docs/</code>, section « utilisation », commandes <code>./mvnw</code>.</p>
+          <h3>Confronter les écrans aux maquettes</h3>
+          <p>Le seul point que je ne peux pas vérifier : les maquettes ne sont pas dans le dépôt. Compare-les toi-même, et <strong>ajoute-les au repo</strong> — un évaluateur ne peut pas juger la conformité sans référence.</p>
         </div>
       </article>
       <article class="action">
         <span class="action-rank">2</span>
         <div class="action-body">
-          <h3>Écrire les tests des trois fonctionnalités critiques</h3>
-          <p>Authentification, upload, téléchargement. C'est le bloc le plus lourdement sanctionné — huit indicateurs — et le plus long à rattraper. Ajouter JaCoCo au <code>pom.xml</code> rend la couverture mesurable, donc le rapport livrable.</p>
+          <h3>Renforcer le responsive</h3>
+          <p>Deux <code>@media</code> pour toute l'application, dans <code>Layout</code> et <code>FileRow</code>. Teste les écrans en largeur mobile et ajoute les points de rupture manquants, notamment sur les formulaires et le tableau des fichiers.</p>
         </div>
       </article>
       <article class="action">
         <span class="action-rank">3</span>
         <div class="action-body">
-          <h3>Créer les quatre fichiers de suivi qualité</h3>
-          <p><code>TESTING.md</code>, <code>SECURITY.md</code>, <code>PERF.md</code>, <code>MAINTENANCE.md</code>. Ils sont nommément exigés. <code>SECURITY.md</code> peut réutiliser directement les écarts déjà relevés dans les cas d'usage.</p>
+          <h3>Formaliser l'accessibilité</h3>
+          <p>21 attributs ARIA constituent une base saine, mais aucun audit n'est tracé. Un rapport Lighthouse et un parcours complet au clavier fourniront des preuves citables en soutenance.</p>
         </div>
       </article>
       <article class="action">
         <span class="action-rank">4</span>
         <div class="action-body">
-          <h3>Documenter les choix techniques et l'usage de l'IA</h3>
-          <p>Un <code>DECISIONS.md</code> répondant à « pourquoi ce choix, quelles alternatives écartées » couvre quatre indicateurs. Le volet IA est un indicateur distinct : décris ta méthode de supervision — c'est exactement ce que tu as pratiqué ce matin en refusant les diagnostics non prouvés.</p>
+          <h3>Compléter les scripts de déploiement</h3>
+          <p><code>docker-compose.yml</code> ne lance que PostgreSQL. Un <code>Dockerfile</code> pour le back et un service supplémentaire dans le compose rendraient le projet déployable en une commande.</p>
         </div>
       </article>
       <article class="action">
         <span class="action-rank">5</span>
         <div class="action-body">
-          <h3>Renforcer le responsive et l'accessibilité</h3>
-          <p>Deux <code>@media</code> pour toute l'application, c'est peu. Un passage au clavier et un audit Lighthouse fourniront des preuves concrètes à citer.</p>
+          <h3>Passer de la mesure à l'optimisation</h3>
+          <p><code>PERF.md</code> caractérise l'existant mais n'améliore rien. La piste la plus défendable : découper le bundle avec <code>React.lazy</code> sur la page publique de téléchargement, seule page vue par des visiteurs sans compte.</p>
         </div>
       </article>
       <article class="action">
         <span class="action-rank">6</span>
         <div class="action-body">
-          <h3>Mesurer la performance</h3>
-          <p>Sans chiffre, l'indicateur « démontrer la bonne performance » est indéfendable. Quelques mesures sur l'upload d'un gros fichier et un Lighthouse sur le front suffisent pour un MVP.</p>
+          <h3>Commiter l'ensemble</h3>
+          <p>Une vingtaine de fichiers créés ou modifiés attendent d'être versionnés. Rien de tout ce travail ne comptera s'il ne figure pas dans le dépôt remis.</p>
         </div>
       </article>
     </div>
   </section>
 
   <footer>
-    Audit réalisé le 21/08/2026 sur le dépôt <code>appFullStack</code>, branche de travail locale.
-    Neuf fichiers modifiés ou créés ne sont pas encore commités — pense à les intégrer avant le dépôt des livrables.
-    Voir aussi <code>g.docs/USE-CASES.md</code> et <code>g.docs/use-cases.html</code>.
+    Deuxième audit réalisé le 21/08/2026 sur le dépôt <code>appFullStack</code>, branche de travail locale.
+    Chaque statut « Acquis » correspond à un fichier présent dans le dépôt ou à une exécution vérifiée.
+    Voir aussi <code>TESTING.md</code>, <code>SECURITY.md</code>, <code>PERF.md</code>, <code>MAINTENANCE.md</code>,
+    <code>g.docs/DECISIONS.md</code> et <code>g.docs/AI-USAGE.md</code>.
   </footer>
 
 </div>
